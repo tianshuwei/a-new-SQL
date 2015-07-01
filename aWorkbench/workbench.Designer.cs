@@ -103,7 +103,7 @@
 			this.statusStrip.Location = new System.Drawing.Point(0, 0);
 			this.statusStrip.Name = "statusStrip";
 			this.statusStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-			this.statusStrip.Size = new System.Drawing.Size(1132, 25);
+			this.statusStrip.Size = new System.Drawing.Size(1205, 25);
 			this.statusStrip.TabIndex = 0;
 			this.statusStrip.Text = "statusStrip1";
 			// 
@@ -123,11 +123,11 @@
 			// toolStripContainer1.ContentPanel
 			// 
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.mainContainer);
-			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1132, 532);
+			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1205, 585);
 			this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
 			this.toolStripContainer1.Name = "toolStripContainer1";
-			this.toolStripContainer1.Size = new System.Drawing.Size(1132, 585);
+			this.toolStripContainer1.Size = new System.Drawing.Size(1205, 638);
 			this.toolStripContainer1.TabIndex = 1;
 			this.toolStripContainer1.Text = "toolStripContainer1";
 			// 
@@ -150,8 +150,8 @@
 			// 
 			this.mainContainer.Panel2.Controls.Add(this.editContainer);
 			this.mainContainer.Panel2.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
-			this.mainContainer.Size = new System.Drawing.Size(1132, 532);
-			this.mainContainer.SplitterDistance = 262;
+			this.mainContainer.Size = new System.Drawing.Size(1205, 585);
+			this.mainContainer.SplitterDistance = 209;
 			this.mainContainer.TabIndex = 1;
 			// 
 			// viewContainer
@@ -169,8 +169,8 @@
 			// 
 			this.viewContainer.Panel2.Controls.Add(this.treeView1);
 			this.viewContainer.Panel2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
-			this.viewContainer.Size = new System.Drawing.Size(257, 532);
-			this.viewContainer.SplitterDistance = 192;
+			this.viewContainer.Size = new System.Drawing.Size(204, 585);
+			this.viewContainer.SplitterDistance = 211;
 			this.viewContainer.TabIndex = 0;
 			// 
 			// panel1
@@ -178,9 +178,9 @@
 			this.panel1.Controls.Add(this.lblDatabase);
 			this.panel1.Controls.Add(this.lblDatabaseName);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel1.Location = new System.Drawing.Point(0, 172);
+			this.panel1.Location = new System.Drawing.Point(0, 191);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(257, 20);
+			this.panel1.Size = new System.Drawing.Size(204, 20);
 			this.panel1.TabIndex = 3;
 			// 
 			// lblDatabase
@@ -215,7 +215,7 @@
 			this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode2});
 			this.treeView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.treeView1.Size = new System.Drawing.Size(257, 331);
+			this.treeView1.Size = new System.Drawing.Size(204, 365);
 			this.treeView1.TabIndex = 0;
 			// 
 			// editContainer
@@ -233,8 +233,8 @@
 			// 
 			this.editContainer.Panel2.Controls.Add(this.tabs);
 			this.editContainer.Panel2.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-			this.editContainer.Size = new System.Drawing.Size(861, 532);
-			this.editContainer.SplitterDistance = 265;
+			this.editContainer.Size = new System.Drawing.Size(987, 585);
+			this.editContainer.SplitterDistance = 237;
 			this.editContainer.TabIndex = 0;
 			// 
 			// tabs
@@ -246,7 +246,7 @@
 			this.tabs.Name = "tabs";
 			this.tabs.Padding = new System.Drawing.Point(10, 5);
 			this.tabs.SelectedIndex = 0;
-			this.tabs.Size = new System.Drawing.Size(861, 253);
+			this.tabs.Size = new System.Drawing.Size(987, 334);
 			this.tabs.TabIndex = 1;
 			// 
 			// consoleTab
@@ -255,7 +255,7 @@
 			this.consoleTab.Location = new System.Drawing.Point(4, 29);
 			this.consoleTab.Name = "consoleTab";
 			this.consoleTab.Padding = new System.Windows.Forms.Padding(3);
-			this.consoleTab.Size = new System.Drawing.Size(853, 220);
+			this.consoleTab.Size = new System.Drawing.Size(979, 301);
 			this.consoleTab.TabIndex = 0;
 			this.consoleTab.Text = "console";
 			this.consoleTab.UseVisualStyleBackColor = true;
@@ -272,7 +272,7 @@
             listViewItem1});
 			this.lstConsoleMsg.Location = new System.Drawing.Point(3, 3);
 			this.lstConsoleMsg.Name = "lstConsoleMsg";
-			this.lstConsoleMsg.Size = new System.Drawing.Size(847, 214);
+			this.lstConsoleMsg.Size = new System.Drawing.Size(973, 295);
 			this.lstConsoleMsg.TabIndex = 0;
 			this.lstConsoleMsg.UseCompatibleStateImageBehavior = false;
 			this.lstConsoleMsg.View = System.Windows.Forms.View.Details;
@@ -317,7 +317,7 @@
             this.aboutToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(1132, 28);
+			this.menuStrip.Size = new System.Drawing.Size(1205, 28);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "menuStrip1";
 			// 
@@ -382,7 +382,7 @@
 			this.editorTableLayout.RowCount = 2;
 			this.editorTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.editorTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.editorTableLayout.Size = new System.Drawing.Size(861, 265);
+			this.editorTableLayout.Size = new System.Drawing.Size(987, 237);
 			this.editorTableLayout.TabIndex = 0;
 			// 
 			// toolStrip1
@@ -397,7 +397,7 @@
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
-			this.toolStrip1.Size = new System.Drawing.Size(861, 27);
+			this.toolStrip1.Size = new System.Drawing.Size(987, 27);
 			this.toolStrip1.TabIndex = 3;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -431,14 +431,14 @@
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-			this.textBox1.Size = new System.Drawing.Size(861, 238);
+			this.textBox1.Size = new System.Drawing.Size(987, 234);
 			this.textBox1.TabIndex = 2;
 			// 
 			// workbench
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1132, 585);
+			this.ClientSize = new System.Drawing.Size(1205, 638);
 			this.Controls.Add(this.toolStripContainer1);
 			this.MainMenuStrip = this.menuStrip;
 			this.Name = "workbench";
