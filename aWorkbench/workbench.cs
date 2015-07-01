@@ -9,11 +9,16 @@ using System.Windows.Forms;
 
 namespace aWorkbench
 {
-	public partial class Form1 : Form
+	public partial class workbench : Form
 	{
-		public Form1()
+		public workbench()
 		{
 			InitializeComponent();
+		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
