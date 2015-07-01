@@ -1,0 +1,90 @@
+start = _ sql_stmt_list _ !.
+sql_stmt_list = _sql_stmt sql_stmt_list
+	| _sql_stmt
+_sql_stmt = sql_stmt SEMICOLON
+sql_stmt = create_table_stmt
+	| alter_table_stmt
+	| rename_table_stmt
+	| drop_table_stmt
+	| insert_stmt
+	| update_stmt
+	| delete_stmt
+	| select_stmt
+	| dummy_stmt
+create_table_stmt = K_CREATE __ K_TABLE __ table_name LPAREN column_defs RPAREN K_INTO __ database_name
+alter_table_stmt = K_ALTER __ K_TABLE __ table_name LPAREN column_def RPAREN K_IN __ database_name
+rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ database_name
+drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name
+insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES LPAREN args RPAREN K_IN __ database_name
+delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ expr __ K_IN __ database_name
+update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ expr __ K_IN __ database_name
+select_stmt = select_core __ K_IN __ database_name
+dummy_stmt = \s*
+select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ expr
+column_defs = column_def COMMA column_defs
+	| column_def
+args = expr COMMA args
+	| expr
+assignments = assignment COMMA assignments
+	| assignment
+columns = column_name COMMA columns
+	| column_name
+	| (\*)
+assignment = column_name EQUAL expr
+column_def = column_name __ type_name __ column_constraint __ valid_flag
+type_name = any_name
+	| any_name LPAREN number RPAREN
+table_name = any_name
+database_name = any_name
+column_name = any_name
+column_constraint = key_flag __ null_flag
+key_flag = (?i)(?:primary) __ (?i)(key)
+	|
+null_flag = K_NOT __ (?i)(null)
+	|
+valid_flag = (?i)(valid)
+	| K_NOT __ (?i)(valid)
+	|
+number = (\d+)
+any_name = IDENTIFIER
+	| `([^`]+)`
+expr = value_expr
+	| boolean_expr
+value_expr = string
+	| additive
+boolean_expr = conjuctional __ K_OR __ conjuctional
+	| conjuctional
+conjuctional = propositional __ K_AND __ propositional
+	| propositional
+propositional = comparitive
+	| value_expr __  K_NOT _ K_NULL
+	| value_expr __ K_IS _ K_NULL
+	| value_expr __ K_NOT _ K_IN LPAREN args RPAREN
+	| value_expr __ K_IN LPAREN args RPAREN
+	| value_expr __ K_NOT _ K_IN LPAREN select_stmt RPAREN
+	| value_expr __ K_IN LPAREN select_stmt RPAREN
+	| K_NOT _ K_EXISTS LPAREN select_stmt RPAREN
+	| K_EXISTS LPAREN select_stmt RPAREN
+comparitive = additive _ (\=\=|\=|\!\=|<>) _ additive biop
+	| string __ (?i)(is *not|is|like) __ string biop
+	| additive _ (<=|<|>=|>) _ additive biop
+	| additive __ K_BETWEEN __ additive __ K_AND __ additive
+	| additive __ K_NOT __ K_BETWEEN __ additive __ K_AND __ additive
+additive = multiplicative _ (\+|-) _ additive biops
+	| additive biops
+multiplicative = factor _ (\*|/|%) _ multiplicative biops
+	| factor biops
+factor = NUMERIC_LITERAL
+	| indecisive
+	| LPAREN expr RPAREN
+	| unary_operator expr
+string = STRING_LITERAL
+	| indecisive
+indecisive = column_name
+	| table_name DOT column_name
+	| K_CAST LPAREN expr K_AS type_name RPAREN
+	| K_NULL
+	| BIND_PARAMETER
+BIND_PARAMETER = @ IDENTIFIER
+IDENTIFIER = ([a-zA-Z_][a-zA-Z_0-9]*)
+
