@@ -28,10 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("TableA");
-			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
-            treeNode3});
-			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+			this.components = new System.ComponentModel.Container();
+			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("TableA");
+			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "233",
             "12"}, -1);
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -39,24 +40,32 @@
 			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
 			this.mainContainer = new System.Windows.Forms.SplitContainer();
 			this.viewContainer = new System.Windows.Forms.SplitContainer();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.lblDatabase = new System.Windows.Forms.Label();
+			this.lblDatabaseName = new System.Windows.Forms.Label();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.editContainer = new System.Windows.Forms.SplitContainer();
-			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.consoleTab = new System.Windows.Forms.TabPage();
 			this.lstConsoleMsg = new System.Windows.Forms.ListView();
 			this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.viewTab = new System.Windows.Forms.TabPage();
+			this.dataGridResult = new System.Windows.Forms.DataGridView();
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.filesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.lblDatabase = new System.Windows.Forms.Label();
-			this.lblDatabaseName = new System.Windows.Forms.Label();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.dataGridResult = new System.Windows.Forms.DataGridView();
+			this.menuStripEditTable = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.addTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.editorTableLayout = new System.Windows.Forms.TableLayoutPanel();
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.toolStripbtnRun = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripbtnCpy = new System.Windows.Forms.ToolStripButton();
+			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.statusStrip.SuspendLayout();
 			this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -70,6 +79,7 @@
 			this.viewContainer.Panel1.SuspendLayout();
 			this.viewContainer.Panel2.SuspendLayout();
 			this.viewContainer.SuspendLayout();
+			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.editContainer)).BeginInit();
 			this.editContainer.Panel1.SuspendLayout();
 			this.editContainer.Panel2.SuspendLayout();
@@ -77,9 +87,11 @@
 			this.tabs.SuspendLayout();
 			this.consoleTab.SuspendLayout();
 			this.viewTab.SuspendLayout();
-			this.menuStrip.SuspendLayout();
-			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).BeginInit();
+			this.menuStrip.SuspendLayout();
+			this.menuStripEditTable.SuspendLayout();
+			this.editorTableLayout.SuspendLayout();
+			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// statusStrip
@@ -98,8 +110,8 @@
 			// statusMsg
 			// 
 			this.statusMsg.Name = "statusMsg";
-			this.statusMsg.Size = new System.Drawing.Size(167, 20);
-			this.statusMsg.Text = "toolStripStatusLabel1";
+			this.statusMsg.Size = new System.Drawing.Size(29, 20);
+			this.statusMsg.Text = "     ";
 			// 
 			// toolStripContainer1
 			// 
@@ -161,17 +173,47 @@
 			this.viewContainer.SplitterDistance = 192;
 			this.viewContainer.TabIndex = 0;
 			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.lblDatabase);
+			this.panel1.Controls.Add(this.lblDatabaseName);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panel1.Location = new System.Drawing.Point(0, 172);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(257, 20);
+			this.panel1.TabIndex = 3;
+			// 
+			// lblDatabase
+			// 
+			this.lblDatabase.AutoSize = true;
+			this.lblDatabase.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.lblDatabase.Location = new System.Drawing.Point(3, 0);
+			this.lblDatabase.Name = "lblDatabase";
+			this.lblDatabase.Size = new System.Drawing.Size(61, 15);
+			this.lblDatabase.TabIndex = 1;
+			this.lblDatabase.Text = "Name: ";
+			// 
+			// lblDatabaseName
+			// 
+			this.lblDatabaseName.AutoSize = true;
+			this.lblDatabaseName.Location = new System.Drawing.Point(70, 0);
+			this.lblDatabaseName.Name = "lblDatabaseName";
+			this.lblDatabaseName.Size = new System.Drawing.Size(55, 15);
+			this.lblDatabaseName.TabIndex = 2;
+			this.lblDatabaseName.Text = "hahaDB";
+			// 
 			// treeView1
 			// 
+			this.treeView1.ContextMenuStrip = this.menuStripEditTable;
 			this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView1.Location = new System.Drawing.Point(0, 0);
 			this.treeView1.Name = "treeView1";
-			treeNode3.Name = "TableA";
-			treeNode3.Text = "TableA";
-			treeNode4.Name = "ndeTable";
-			treeNode4.Text = "Tables";
+			treeNode1.Name = "TableA";
+			treeNode1.Text = "TableA";
+			treeNode2.Name = "ndeTable";
+			treeNode2.Text = "Tables";
 			this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode2});
 			this.treeView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.treeView1.Size = new System.Drawing.Size(257, 331);
 			this.treeView1.TabIndex = 0;
@@ -185,7 +227,7 @@
 			// 
 			// editContainer.Panel1
 			// 
-			this.editContainer.Panel1.Controls.Add(this.textBox1);
+			this.editContainer.Panel1.Controls.Add(this.editorTableLayout);
 			// 
 			// editContainer.Panel2
 			// 
@@ -194,16 +236,6 @@
 			this.editContainer.Size = new System.Drawing.Size(861, 532);
 			this.editContainer.SplitterDistance = 265;
 			this.editContainer.TabIndex = 0;
-			// 
-			// textBox1
-			// 
-			this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textBox1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBox1.Location = new System.Drawing.Point(0, 0);
-			this.textBox1.Multiline = true;
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(861, 265);
-			this.textBox1.TabIndex = 0;
 			// 
 			// tabs
 			// 
@@ -237,7 +269,7 @@
 			this.lstConsoleMsg.FullRowSelect = true;
 			this.lstConsoleMsg.GridLines = true;
 			this.lstConsoleMsg.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
 			this.lstConsoleMsg.Location = new System.Drawing.Point(3, 3);
 			this.lstConsoleMsg.Name = "lstConsoleMsg";
 			this.lstConsoleMsg.Size = new System.Drawing.Size(847, 214);
@@ -265,6 +297,16 @@
 			this.viewTab.TabIndex = 1;
 			this.viewTab.Text = "views";
 			this.viewTab.UseVisualStyleBackColor = true;
+			// 
+			// dataGridResult
+			// 
+			this.dataGridResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridResult.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dataGridResult.Location = new System.Drawing.Point(3, 3);
+			this.dataGridResult.Name = "dataGridResult";
+			this.dataGridResult.RowTemplate.Height = 27;
+			this.dataGridResult.Size = new System.Drawing.Size(847, 214);
+			this.dataGridResult.TabIndex = 0;
 			// 
 			// menuStrip
 			// 
@@ -306,44 +348,91 @@
 			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
 			this.aboutToolStripMenuItem.Text = "About";
 			// 
-			// lblDatabase
+			// menuStripEditTable
 			// 
-			this.lblDatabase.AutoSize = true;
-			this.lblDatabase.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.lblDatabase.Location = new System.Drawing.Point(3, 0);
-			this.lblDatabase.Name = "lblDatabase";
-			this.lblDatabase.Size = new System.Drawing.Size(61, 15);
-			this.lblDatabase.TabIndex = 1;
-			this.lblDatabase.Text = "Name: ";
+			this.menuStripEditTable.ImageScalingSize = new System.Drawing.Size(20, 20);
+			this.menuStripEditTable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addTableToolStripMenuItem,
+            this.refreshToolStripMenuItem});
+			this.menuStripEditTable.Name = "menuStripEditTable";
+			this.menuStripEditTable.Size = new System.Drawing.Size(167, 52);
 			// 
-			// lblDatabaseName
+			// addTableToolStripMenuItem
 			// 
-			this.lblDatabaseName.AutoSize = true;
-			this.lblDatabaseName.Location = new System.Drawing.Point(70, 0);
-			this.lblDatabaseName.Name = "lblDatabaseName";
-			this.lblDatabaseName.Size = new System.Drawing.Size(55, 15);
-			this.lblDatabaseName.TabIndex = 2;
-			this.lblDatabaseName.Text = "hahaDB";
+			this.addTableToolStripMenuItem.Name = "addTableToolStripMenuItem";
+			this.addTableToolStripMenuItem.Size = new System.Drawing.Size(166, 24);
+			this.addTableToolStripMenuItem.Text = "Add table ...";
 			// 
-			// panel1
+			// refreshToolStripMenuItem
 			// 
-			this.panel1.Controls.Add(this.lblDatabase);
-			this.panel1.Controls.Add(this.lblDatabaseName);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel1.Location = new System.Drawing.Point(0, 172);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(257, 20);
-			this.panel1.TabIndex = 3;
+			this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(166, 24);
+			this.refreshToolStripMenuItem.Text = "Refresh";
 			// 
-			// dataGridResult
+			// editorTableLayout
 			// 
-			this.dataGridResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridResult.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridResult.Location = new System.Drawing.Point(3, 3);
-			this.dataGridResult.Name = "dataGridResult";
-			this.dataGridResult.RowTemplate.Height = 27;
-			this.dataGridResult.Size = new System.Drawing.Size(847, 214);
-			this.dataGridResult.TabIndex = 0;
+			this.editorTableLayout.ColumnCount = 1;
+			this.editorTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.editorTableLayout.Controls.Add(this.toolStrip1, 0, 0);
+			this.editorTableLayout.Controls.Add(this.textBox1, 0, 1);
+			this.editorTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.editorTableLayout.Location = new System.Drawing.Point(0, 0);
+			this.editorTableLayout.Margin = new System.Windows.Forms.Padding(0);
+			this.editorTableLayout.Name = "editorTableLayout";
+			this.editorTableLayout.RowCount = 2;
+			this.editorTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.editorTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.editorTableLayout.Size = new System.Drawing.Size(861, 265);
+			this.editorTableLayout.TabIndex = 0;
+			// 
+			// toolStrip1
+			// 
+			this.toolStrip1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripbtnRun,
+            this.toolStripSeparator1,
+            this.toolStripbtnCpy});
+			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+			this.toolStrip1.Name = "toolStrip1";
+			this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
+			this.toolStrip1.Size = new System.Drawing.Size(861, 27);
+			this.toolStrip1.TabIndex = 3;
+			this.toolStrip1.Text = "toolStrip1";
+			// 
+			// toolStripbtnRun
+			// 
+			this.toolStripbtnRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripbtnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripbtnRun.Name = "toolStripbtnRun";
+			this.toolStripbtnRun.Size = new System.Drawing.Size(37, 24);
+			this.toolStripbtnRun.Text = "run";
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+			// 
+			// toolStripbtnCpy
+			// 
+			this.toolStripbtnCpy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripbtnCpy.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripbtnCpy.Name = "toolStripbtnCpy";
+			this.toolStripbtnCpy.Size = new System.Drawing.Size(49, 24);
+			this.toolStripbtnCpy.Text = "copy";
+			// 
+			// textBox1
+			// 
+			this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBox1.Location = new System.Drawing.Point(0, 27);
+			this.textBox1.Margin = new System.Windows.Forms.Padding(0);
+			this.textBox1.Multiline = true;
+			this.textBox1.Name = "textBox1";
+			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+			this.textBox1.Size = new System.Drawing.Size(861, 238);
+			this.textBox1.TabIndex = 2;
 			// 
 			// workbench
 			// 
@@ -374,19 +463,23 @@
 			this.viewContainer.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.viewContainer)).EndInit();
 			this.viewContainer.ResumeLayout(false);
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
 			this.editContainer.Panel1.ResumeLayout(false);
-			this.editContainer.Panel1.PerformLayout();
 			this.editContainer.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.editContainer)).EndInit();
 			this.editContainer.ResumeLayout(false);
 			this.tabs.ResumeLayout(false);
 			this.consoleTab.ResumeLayout(false);
 			this.viewTab.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).EndInit();
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).EndInit();
+			this.menuStripEditTable.ResumeLayout(false);
+			this.editorTableLayout.ResumeLayout(false);
+			this.editorTableLayout.PerformLayout();
+			this.toolStrip1.ResumeLayout(false);
+			this.toolStrip1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -398,7 +491,6 @@
 		private System.Windows.Forms.ToolStripContainer toolStripContainer1;
 		private System.Windows.Forms.SplitContainer mainContainer;
 		private System.Windows.Forms.SplitContainer editContainer;
-		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.TabControl tabs;
 		private System.Windows.Forms.TabPage consoleTab;
 		private System.Windows.Forms.TabPage viewTab;
@@ -416,6 +508,15 @@
 		private System.Windows.Forms.Label lblDatabase;
 		private System.Windows.Forms.Label lblDatabaseName;
 		private System.Windows.Forms.DataGridView dataGridResult;
+		private System.Windows.Forms.ContextMenuStrip menuStripEditTable;
+		private System.Windows.Forms.ToolStripMenuItem addTableToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+		private System.Windows.Forms.TableLayoutPanel editorTableLayout;
+		private System.Windows.Forms.ToolStrip toolStrip1;
+		private System.Windows.Forms.ToolStripButton toolStripbtnRun;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripButton toolStripbtnCpy;
+		private System.Windows.Forms.TextBox textBox1;
 	}
 }
 
