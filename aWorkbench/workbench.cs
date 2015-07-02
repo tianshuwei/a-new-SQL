@@ -107,6 +107,7 @@ namespace aWorkbench
 		private void runCmds(object sender, EventArgs e)
 		{
             string cmds = txtScripts.Text;
+
             //todo
 		}
 
