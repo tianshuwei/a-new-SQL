@@ -17,6 +17,9 @@ namespace aWorkbench
 		{
 			InitializeComponent();
 			con = new aSQLConnector("localhost", 3306);
+			dataGridResult.Columns.Add("col2", "col2");
+			dataGridResult.Columns.Add("col1","col1");
+			BindingSource xx=new BindingSource(
 		}
 
 		private void Form1_Load(object sender, EventArgs e)

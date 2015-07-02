@@ -28,12 +28,11 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_list_databases=lambda *ts: (list_databases,()),
 	unescape=lambda c: UNESCAPE_CHAR[c] if c in UNESCAPE_CHAR else c)
 
-def execute_one(sql):
-	f,x=parse(sql)
-	return f(*x)
+def execute(sql):
+	for r in parse(sql):
+		if len(r)==2: r[0](*r[1])
+		else: print r
 
 if __name__ == '__main__':
 	for stmt in parse(G(sys.argv[1])):
 		print stmt
-		# f,x=stmt
-		# f(*x)
