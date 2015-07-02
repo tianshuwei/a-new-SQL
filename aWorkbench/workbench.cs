@@ -87,21 +87,32 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
-			/*Dictionary<string, object> treetable = new Dictionary<string, object>();
-            foreach (KeyValuePair<string,object> ob in treetable)
-            {
-                IList<string> list = (IList<string>)obj.Value;
-            }*/
 			//string jsonString = con.send("list tables;");
 			// return {ok:0/1,result:...}
-			string jsonString = "{'ok':1,result:['table1','table2','table3']}";
-			aSQLConnector.jsonResult jr = JSON.fromJson<aSQLConnector.jsonResult>(jsonString);
-			if (jr.ok == 0) { MessageBox.Show(jr.result); return; }
-			List<string> tables = JSON.fromJson<List<string>>(jr.result);
-			string dbname = "XXDB";
-            string tablename = "XXtable";
-            string sql1 = "select * from " + dbname + " ";
-            string sql2 = "select * from " + tablename + " ";
+            //aSQLConnector.jsonResult
+
+			string jsonString = "{'ok':1,result:['table1','table2','table3']}";//ok,result类型是string还是char？
+            JObject jr = JSON.fromJson(jsonString);
+            string ok = jr["ok"].ToString();
+            string result = jr["result"].ToString();
+
+			if (ok == "0") { MessageBox.Show(result); return; }
+            string[] tables = result.Split(new char[] { ',' });
+            foreach (string tablename in tables)
+            {
+                TreeNode nodeChild = new TreeNode();
+                nodeChild.Text = tablename;
+                treeTable.Nodes.Add(nodeChild);
+
+                string colname = "{'ok':1,result:['table1','table2','table3']}";
+                JObject cn = JSON.fromJson(colname);
+                string ok2 = jr["ok"].ToString();
+                string result2 = jr["result"].ToString();
+
+                if (ok2 == "0") { MessageBox.Show(result); return; }
+                string[] coltables = result2.Split(new char[] { ',' });
+                foreach (string name in coltables) { }
+            }
 		}
 		
 
@@ -141,6 +152,11 @@ namespace aWorkbench
         {
 
 		}
+
+        private void treeTable_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
 
 
 	}
