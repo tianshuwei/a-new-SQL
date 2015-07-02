@@ -99,7 +99,7 @@ namespace aWorkbench
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
 
-			if (ok == "0") { MessageBox.Show(result); return; }
+			if (ok "0") { MessageBox.Show(result); return; }
             string[] tables = result.Split(new char[] { ',' });
             foreach (string tablename in tables)
             {
@@ -124,6 +124,14 @@ namespace aWorkbench
             string cmds = txtScripts.Text;
 
             //todo
+            string jsonString = "{'ok':1,result:['table1','table2','table3']}";//ok,result类型是string还是char？
+            JObject jr = JSON.fromJson(jsonString);
+            string ok = jr["ok"].ToString();
+            if (ok == "0") { 
+                string result["ok"].T
+                MessageBox.Show(result); return; }
+            string[] tables = result.Split(new char[] { ',' });
+
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
