@@ -10,7 +10,7 @@ def run():
 		sock.listen(5)
 		while 1:
 			s, raddr=sock.accept()
-			print 'foreign addr:', raddr
+			print 'accepted', raddr
 			try:
 				data=s.recv(2048)
 				if SYMBOL_START in data and SYMBOL_END in data:
@@ -19,13 +19,17 @@ def run():
 			except:
 				traceback.print_exc()
 			else:
-				s.send("ok")
+				s.send("""{"ok":0,result:["not implemented"]}""")
 			finally: s.close()
 	except KeyboardInterrupt: pass
 	finally: sock.close()
 
 def onDataReceived(x):
-	print x
+	if not x[0]:
+		onSQL(x[1])
+
+def onSQL(sql):
+	pass
 
 if __name__ == '__main__':
 	run()
