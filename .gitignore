@@ -192,4 +192,10 @@ ModelManifest.xml
 # Python bytecodes
 *.pyc
 
+# Temporary files
 tmp/
+
+# Project target files
+*.dbf
+*.dat
+

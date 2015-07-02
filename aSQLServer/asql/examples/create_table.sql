@@ -1,27 +1,27 @@
-create table t1(id int) into mydb;
+create table t1(id int) into parser_test;
 
-create table t1(
+create table t2(
 	id int primary key not null
-) into mydb;
+) into parser_test;
 
-create table t1(
-	id char(10) primary key not null
-) into mydb;
+create table t3(
+	id varchar(10) primary key not null
+) into parser_test;
 
-create table t1(
+create table t4(
 	id int primary key not null,
 	name varchar(20) not null,
 	address varchar(80)
-) into mydb;
+) into parser_test;
 
-create table t1(
+create table t5(
 	id int primary key not null,
 	name varchar(20) not null,
 	address varchar(80) not null valid
-) into mydb;
+) into parser_test;
 
-create table t1(
+create table t6(
 	id int primary key not null,
 	name varchar(20) not null,
 	address varchar(80) not valid
-) into mydb;
+) into parser_test;

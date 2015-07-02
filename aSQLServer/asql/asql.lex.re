@@ -1,10 +1,10 @@
 K_ALTER = (?i)(edit)
-K_TABLE = (?i)(table)
+K_TABLE = (?i)(?:table)
 K_RENAME = (?i)(rename)
 K_DROP = (?i)(drop)
-K_CREATE = (?i)(create)
+K_CREATE = (?i)(?:create)
 K_IN = (?i)(in)
-K_INTO = (?i)(into)
+K_INTO = (?i)(?:into)
 K_INSERT = (?i)(insert)
 K_VALUES = (?i)(values)
 K_DELETE = (?i)(delete)
@@ -27,7 +27,7 @@ EQUAL = _ \= _
 DOT = _ \. _
 BIND_PARAMETER = @ IDENTIFIER
 IDENTIFIER = ([a-zA-Z_][a-zA-Z_0-9]*)
-NUMERIC_LITERAL = (\d+)
+NUMERIC_LITERAL = (\d+) int
 STRING_LITERAL = " chars " join
 	| ' sqchars ' join
 chars = char chars

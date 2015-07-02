@@ -1,10 +1,11 @@
+# -*- coding: utf8 -*-
 import struct
 
-def create_table(name, num, tablespec):   #表名char[20]，字段数，字段队列
+def create_table(tablespec, dbname):
 	try:
-		bwfile=open("mydb.dbf",'ab')
-		content1 = struct.pack("c20si",'~',name,num)
-		bwfile.writeline(content1)
+		bwfile=open('%s.dbf'%dbname,'ab')
+		content1 = struct.pack("c20si",'~',tablespec.tname,len(tablespec.columns))
+		bwfile.write(content1)
 		# typedef struct {
 		#   char sFieldName[20];  //字段名
 		#   char sType[8];  //字段类型
@@ -13,12 +14,13 @@ def create_table(name, num, tablespec):   #表名char[20]，字段数，字段�
 		#   bool bNullFlag;  //该字段是否允许为空
 		#   bool bValidFlag;  //该字段是否有效，可用于以后对表中该字段的删除
 		#   } TableMode,*PTableMode;
-		for line in tablespec:
-			content2 = struct.pack("20s8si???",line[0],line[1],line[2],line[3],line[4],line[5])
-			bwfile.writeline(content2)
+		for line in tablespec.columns:
+			content2 = struct.pack("20s8si???",*line)
+			bwfile.write(content2)
 		bwfile.flush()
 		bwfile.close()
 	except Exception,e:
 		print e
 
-def list_table(name):
+def list_tables(dbname):
+	pass
