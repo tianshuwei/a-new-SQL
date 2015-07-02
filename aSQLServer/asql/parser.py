@@ -23,6 +23,9 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_null=lambda *ts: bool(ts[0].upper()!="NOT"),
 	mk_valid=lambda *ts: bool(ts[0].upper()!="NOT"),
 	mk_create_table=lambda *ts: (create_table,(tablespec(tname=ts[0], columns=ts[1]),ts[2])),
+	mk_list_columns=lambda *ts: (list_columns,(ts[0],ts[1])),
+	mk_list_tables=lambda *ts: (list_tables,(ts[0])),
+	mk_list_databases=lambda *ts: (list_databases,()),
 	unescape=lambda c: UNESCAPE_CHAR[c] if c in UNESCAPE_CHAR else c)
 
 def execute_one(sql):
@@ -31,6 +34,6 @@ def execute_one(sql):
 
 if __name__ == '__main__':
 	for stmt in parse(G(sys.argv[1])):
-		# print stmt
-		f,x=stmt
-		f(*x)
+		print stmt
+		# f,x=stmt
+		# f(*x)

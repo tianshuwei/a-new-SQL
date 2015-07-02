@@ -10,6 +10,7 @@ sql_stmt = create_table_stmt
 	| update_stmt
 	| delete_stmt
 	| select_stmt
+	| list_stmt
 	| dummy_stmt
 create_table_stmt = K_CREATE __ K_TABLE __ table_name _ \( _ _column_defs _ \) _ K_INTO __ database_name mk_create_table
 alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_IN __ database_name
@@ -19,6 +20,9 @@ insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ \( _ args _ \) _ K_
 delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ expr __ K_IN __ database_name
 update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ expr __ K_IN __ database_name
 select_stmt = select_core __ K_IN __ database_name
+list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
+	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
+	| K_LIST __ (?i)(?:databases) mk_list_databases
 dummy_stmt = \s*
 select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ expr
 _column_defs = column_defs hug
