@@ -10,7 +10,9 @@ namespace aWorkbench
 	class aSQLConnector
 	{
 		public class jsonResult{
+			[DataMember(Order = 0)]
 			public int ok;
+			[DataMember(Order = 0)]
 			public string result;
 		}
 		public enum STATUS{ OPEN,SUSPEND,CLOSE};

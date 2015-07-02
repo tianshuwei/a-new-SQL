@@ -7,12 +7,14 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Configuration;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace aWorkbench
 {
 	class JSON
 	{
-		//ref: http://www.cnblogs.com/coderzh/archive/2008/11/25/1340862.html
+		//ref: http://www.cnblogs.com/txw1958/archive/2012/08/01/csharp-json.html
 		public static string toJson<T>(T obj)
 		{
 			var serializer = new DataContractJsonSerializer(obj.GetType());
@@ -28,11 +30,9 @@ namespace aWorkbench
 			return Encoding.UTF8.GetString(dataBytes);
 		}
 
-		public static T fromJson<T>(string jsonString) {
-			var serializer = new DataContractJsonSerializer(typeof(T));
-			var mStream = new MemoryStream(Encoding.Default.GetBytes(jsonString));
-			return (T)serializer.ReadObject(mStream);
-			
-		}
+		public static JObject fromJson(string jsonString) {
+			return (JObject)JsonConvert.DeserializeObject(jsonString);
+
+	}
 	}
 }
