@@ -29,14 +29,14 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("▷ col1");
-			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("▷ col2");
-			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("☷ TableA", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
-            treeNode3});
-			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+			System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("▷ col1");
+			System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("▷ col2");
+			System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("☷ TableA", new System.Windows.Forms.TreeNode[] {
+            treeNode5,
+            treeNode6});
+			System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
+            treeNode7});
+			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "233",
             "12"}, -1);
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -213,16 +213,16 @@
 			this.treeTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeTable.Location = new System.Drawing.Point(0, 0);
 			this.treeTable.Name = "treeTable";
-			treeNode1.Name = "col1";
-			treeNode1.Text = "▷ col1";
-			treeNode2.Name = "col2";
-			treeNode2.Text = "▷ col2";
-			treeNode3.Name = "TableA";
-			treeNode3.Text = "☷ TableA";
-			treeNode4.Name = "ndeTable";
-			treeNode4.Text = "Tables";
+			treeNode5.Name = "col1";
+			treeNode5.Text = "▷ col1";
+			treeNode6.Name = "col2";
+			treeNode6.Text = "▷ col2";
+			treeNode7.Name = "TableA";
+			treeNode7.Text = "☷ TableA";
+			treeNode8.Name = "ndeTable";
+			treeNode8.Text = "Tables";
 			this.treeTable.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode8});
 			this.treeTable.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.treeTable.Size = new System.Drawing.Size(203, 365);
 			this.treeTable.TabIndex = 0;
@@ -376,7 +376,7 @@
 			this.lstConsoleMsg.FullRowSelect = true;
 			this.lstConsoleMsg.GridLines = true;
 			this.lstConsoleMsg.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
 			this.lstConsoleMsg.Location = new System.Drawing.Point(3, 3);
 			this.lstConsoleMsg.Name = "lstConsoleMsg";
 			this.lstConsoleMsg.Size = new System.Drawing.Size(974, 295);
@@ -440,14 +440,14 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openScript);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
 			this.exitToolStripMenuItem.Text = "Exit";
 			// 
 			// aboutToolStripMenuItem

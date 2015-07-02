@@ -8,5 +8,6 @@ namespace aWorkbench
 	public static class cfg
 	{
 		public static int example { get; set; }
+		
 	}
 }
