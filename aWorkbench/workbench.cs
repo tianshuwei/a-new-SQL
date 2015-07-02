@@ -11,9 +11,11 @@ namespace aWorkbench
 {
 	public partial class workbench : Form
 	{
+		private aSQLConnector con;
 		public workbench()
 		{
 			InitializeComponent();
+			con = new aSQLConnector("localhost", 3306);
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -84,12 +86,18 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
-            /*Dictionary<string, object> treetable = new Dictionary<string, object>();
+			/*Dictionary<string, object> treetable = new Dictionary<string, object>();
             foreach (KeyValuePair<string,object> ob in treetable)
             {
                 IList<string> list = (IList<string>)obj.Value;
             }*/
-            string dbname = "XXDB";
+			//string jsonString = con.send("list tables;");
+			// return {ok:0/1,result:...}
+			string jsonString = "{'ok':1,result:['table1','table2','table3']}";
+			aSQLConnector.jsonResult jr = JSON.fromJson<aSQLConnector.jsonResult>(jsonString);
+			if (jr.ok == 0) { MessageBox.Show(jr.result); return; }
+			List<string> tables = JSON.fromJson<List<string>>(jr.result);
+			string dbname = "XXDB";
             string tablename = "XXtable";
             string sql1 = "select * from " + dbname + " ";
             string sql2 = "select * from " + tablename + " ";

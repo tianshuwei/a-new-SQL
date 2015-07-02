@@ -9,6 +9,10 @@ namespace aWorkbench
 {
 	class aSQLConnector
 	{
+		public class jsonResult{
+			public int ok;
+			public string result;
+		}
 		public enum STATUS{ OPEN,SUSPEND,CLOSE};
 		private IPAddress ip;
 		private int port;
