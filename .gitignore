@@ -192,3 +192,4 @@ ModelManifest.xml
 # Python bytecodes
 *.pyc
 
+tmp/
