@@ -39,8 +39,34 @@ namespace aWorkbench
 			{
 				switch (e.Node.Level) {
 					case 0://顶层 Tables
+                        int xx=e.Node.TreeView.SelectedNode.GetNodeCount(true);
+                        string[] tables=new string[20];
+                        for (int i = 0; i < xx; i++)
+                        {
+                            tables[i] = "drop " + e.Node.TreeView.Nodes[i].Text;
+                            ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tables[i]);
+                            tsmi1.Click += new System.EventHandler(
+                                (object _sender, EventArgs _e) =>
+                                {
+                                    //do something
+                                }
+                                );
+                            menuStripEditTable.Items.RemoveAt(0);
+                            menuStripEditTable.Items.Insert(0, tsmi1);
+                            break;
+                        }
 						break;
 					case 1:// TableA
+                        string tableA = "drop " + e.Node.Text;
+                        ToolStripMenuItem tsmi2 = new ToolStripMenuItem(tableA);
+						tsmi2.Click += new System.EventHandler(
+							(object _sender, EventArgs _e) => {
+								//do something
+							}
+							);
+						menuStripEditTable.Items.RemoveAt(0);
+						menuStripEditTable.Items.Insert(0, tsmi);
+						break;
 						break;
 					case 2://col1
 						ToolStripMenuItem tsmi = new ToolStripMenuItem("remove col " + e.Node.Text);
@@ -59,12 +85,17 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
-
+            Dictionary<string,object> refresh=new Dictionary<string,object>();
+            
+              foreach (KeyValuePair<string, string> kv in refresh)
+            {
+                Console.WriteLine(kv.Key + kv.Value);
+            }
 		}
 
 		private void runCmds(object sender, EventArgs e)
 		{
-
+           
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
@@ -74,8 +105,27 @@ namespace aWorkbench
 
 		private void openScript(object sender, EventArgs e)
 		{
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "*.sql"; //过滤文件类型
+            fd.InitialDirectory = Application.StartupPath + "\\Temp\\";//设定初始目录
+            fd.ShowReadOnly = false; //设定文件是否只读
+            DialogResult r = fd.ShowDialog();
+            if (r == DialogResult.OK)
+            {
+                //进行后续处理
+            }
 
 		}
+
+        private void txtScripts_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridResult_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
 
 
 	}
