@@ -65,8 +65,7 @@ namespace aWorkbench
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
-						menuStripEditTable.Items.Insert(0, tsmi);
-						break;
+						menuStripEditTable.Items.Insert(0, tsmi2);
 						break;
 					case 2://col1
 						ToolStripMenuItem tsmi = new ToolStripMenuItem("remove col " + e.Node.Text);
@@ -85,22 +84,28 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
-            Dictionary<string,object> refresh=new Dictionary<string,object>();
-            
-              foreach (KeyValuePair<string, string> kv in refresh)
+            /*Dictionary<string, object> treetable = new Dictionary<string, object>();
+            foreach (KeyValuePair<string,object> ob in treetable)
             {
-                Console.WriteLine(kv.Key + kv.Value);
-            }
+                IList<string> list = (IList<string>)obj.Value;
+            }*/
+            string dbname = "XXDB";
+            string tablename = "XXtable";
+            string sql1 = "select * from " + dbname + " ";
+            string sql2 = "select * from " + tablename + " ";
 		}
+		
 
 		private void runCmds(object sender, EventArgs e)
 		{
-           
+            string cmds = txtScripts.Text;
+            //todo
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
 		{
-
+            if (txtScripts.SelectedText != "")
+                Clipboard.SetDataObject(txtScripts.SelectedText);
 		}
 
 		private void openScript(object sender, EventArgs e)
@@ -125,7 +130,7 @@ namespace aWorkbench
         private void dataGridResult_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
-        }
+		}
 
 
 	}
