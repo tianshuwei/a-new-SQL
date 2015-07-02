@@ -19,9 +19,26 @@ K_CAST = (?i)(cast)
 K_AS = (?i)(as)
 K_IS = (?i)(is)
 K_EXISTS = (?i)(exists)
-SEMICOLON = \s*;\s*
-LPAREN = \s*\(\s*
-RPAREN = \s*\)\s*
-COMMA = \s*,\s*
-EQUAL = \s*\=\s*
-DOT = \s*\.\s*
+K_SELECT = (?i)(select)
+K_NULL = (?i)(null)
+SEMICOLON = _ ; _
+COMMA = _ , _
+EQUAL = _ \= _
+DOT = _ \. _
+BIND_PARAMETER = @ IDENTIFIER
+IDENTIFIER = ([a-zA-Z_][a-zA-Z_0-9]*)
+NUMERIC_LITERAL = (\d+)
+STRING_LITERAL = " chars " join
+	| ' sqchars ' join
+chars = char chars
+	|
+sqchars = sqchar sqchars
+	|
+char = ([^\x00-\x1f"\\])
+	| esc_char
+sqchar = ([^\x00-\x1f'\\])
+	| esc_char
+esc_char = \\(['"/\\])
+	| \\([bfnrt]) unescape
+_ = \s*
+__ = \s+
