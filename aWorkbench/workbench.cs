@@ -59,22 +59,40 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
-
-		}
+            /*Dictionary<string, object> treetable = new Dictionary<string, object>();
+            foreach (KeyValuePair<string,object> ob in treetable)
+            {
+                IList<string> list = (IList<string>)obj.Value;
+            }*/
+            string dbname = "XXDB";
+            string tablename = "XXtable";
+            string sql1 = "select * from " + dbname + " ";
+            string sql2 = "select * from " + tablename + " ";
+        }
 
 		private void runCmds(object sender, EventArgs e)
 		{
-
+            string cmds = txtScripts.Text;
+            //todo
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
 		{
-
+            if (txtScripts.SelectedText != "")
+                Clipboard.SetDataObject(txtScripts.SelectedText);
 		}
 
 		private void openScript(object sender, EventArgs e)
 		{
-
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "*.sql"; //过滤文件类型
+            fd.InitialDirectory = Application.StartupPath + "\\Temp\\";//设定初始目录
+            fd.ShowReadOnly = false; //设定文件是否只读
+            DialogResult r = fd.ShowDialog();
+            if (r == DialogResult.OK)
+            {
+                //进行后续处理
+            }
 		}
 
 
