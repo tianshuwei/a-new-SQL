@@ -17,25 +17,25 @@ alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_I
 rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ database_name mk_rename_table
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_drop_table
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ \( _ args _ \) _ K_IN __ database_name
-delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ expr __ K_IN __ database_name
-update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ expr __ K_IN __ database_name
+delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ boolean_expr __ K_IN __ database_name
+update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ boolean_expr __ K_IN __ database_name
 select_stmt = select_core __ K_IN __ database_name
 list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
 	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
 	| K_LIST __ (?i)(?:databases) mk_list_databases
 dummy_stmt = \s*
-select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ expr
+select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ boolean_expr
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
-args = expr COMMA args
-	| expr
+args = value_expr COMMA args
+	| value_expr
 assignments = assignment COMMA assignments
 	| assignment
 columns = column_name COMMA columns
 	| column_name
 	| (\*)
-assignment = column_name EQUAL expr
+assignment = column_name EQUAL value_expr
 column_def = column_name __ type_name __ column_constraint __ valid_flag mk_columnIV
 	| column_name __ type_name __ column_constraint mk_columnI
 	| column_name __ type_name __ valid_flag mk_columnII
@@ -83,8 +83,8 @@ multiplicative = factor _ (\*|/|%) _ multiplicative biops
 	| factor biops
 factor = NUMERIC_LITERAL
 	| dynamic
-	| _ \( _ expr _ \) _
-	| unary_operator expr
+	| _ \( _ additive _ \) _
+	| unary_operator additive
 string = STRING_LITERAL
 	| dynamic
 dynamic = column_name
