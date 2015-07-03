@@ -5,9 +5,8 @@ using System.Text;
 
 namespace aWorkbench
 {
-	public static class cfg
+	class tableInfo
 	{
-		public static int example { get; set; }
-		
+		Dictionary<string, Elem.VALTYPE> fields;
 	}
 }
