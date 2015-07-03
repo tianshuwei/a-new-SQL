@@ -26,6 +26,7 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_list_columns=lambda *ts: (list_columns,(ts[0],ts[1])),
 	mk_list_tables=lambda *ts: (list_tables,(ts[0])),
 	mk_list_databases=lambda *ts: (list_databases,()),
+	mk_rename_table=lambda *ts: (rename_table, (ts[0],ts[1],ts[2])),
 	unescape=lambda c: UNESCAPE_CHAR[c] if c in UNESCAPE_CHAR else c)
 
 def execute(sql):

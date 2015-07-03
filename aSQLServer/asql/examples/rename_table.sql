@@ -1,0 +1,1 @@
+rename table t2 t22 in parser_test;

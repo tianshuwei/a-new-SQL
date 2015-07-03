@@ -30,3 +30,6 @@ def list_tables(dbname):
 
 def list_databases():
 	pass
+
+def rename_table(tname, tname_new, dbname):
+	pass
