@@ -22,6 +22,7 @@ def create_table(tablespec, dbname):
 	except Exception,e:
 		print e
 
+
 def list_columns(tname, dbname):
 	pass
 
@@ -30,3 +31,10 @@ def list_tables(dbname):
 
 def list_databases():
 	pass
+
+
+def test():
+	pass
+
+if __name__ == '__main__':
+	test()
