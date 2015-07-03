@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,7 +51,22 @@
   <ItemGroup>
     <Compile Include="aSQLConnector.cs" />
     <Compile Include="cfg.cs" />
+    <Compile Include="Elem.cs" />
+    <Compile Include="frmConfirmScript.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConfirmScript.Designer.cs">
+      <DependentUpon>frmConfirmScript.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCreateTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCreateTable.Designer.cs">
+      <DependentUpon>frmCreateTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="JSON.cs" />
+    <Compile Include="resultSet.cs" />
+    <Compile Include="tableInfo.cs" />
     <Compile Include="workbench.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,6 +75,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmConfirmScript.resx">
+      <DependentUpon>frmConfirmScript.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCreateTable.resx">
+      <DependentUpon>frmCreateTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="workbench.resx">
       <DependentUpon>workbench.cs</DependentUpon>
     </EmbeddedResource>
@@ -81,6 +103,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
