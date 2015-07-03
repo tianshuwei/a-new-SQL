@@ -39,3 +39,9 @@ def edit_table(tname, cname, columnspec, dbname):
 
 def drop_table(tname, dbname):
 	pass
+
+def insert(tname, values, dbname):
+	"""values: e.g.((1, "jason", None),
+					(2, "bradley", None),
+					(3, "duffy", "warwick avenue")) """
+	pass

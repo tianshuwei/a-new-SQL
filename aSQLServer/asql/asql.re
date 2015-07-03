@@ -16,7 +16,7 @@ create_table_stmt = K_CREATE __ K_TABLE __ table_name _ \( _ _column_defs _ \) _
 alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_IN __ database_name mk_alter_table
 rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ database_name mk_rename_table
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_drop_table
-insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ \( _ args _ \) _ K_IN __ database_name
+insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ _insert_values _ K_IN __ database_name mk_insert
 delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ boolean_expr __ K_IN __ database_name
 update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ boolean_expr __ K_IN __ database_name
 select_stmt = select_core __ K_IN __ database_name
@@ -28,8 +28,8 @@ select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ boolean_
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
-args = value_expr COMMA args
-	| value_expr
+consts = const_expr COMMA consts
+	| const_expr
 assignments = assignment COMMA assignments
 	| assignment
 columns = column_name COMMA columns
@@ -55,8 +55,14 @@ any_name = IDENTIFIER
 	| `([^`]+)`
 expr = value_expr
 	| boolean_expr
+_insert_values = insert_values hug
+insert_values = insert_value COMMA insert_values
+	| insert_value
+insert_value = \( _ consts _ \) hug
+const_expr = string
+	| _additive calc
 value_expr = string
-	| additive
+	| _additive
 boolean_expr = conjuctional __ K_OR __ conjuctional
 	| conjuctional
 conjuctional = _propositional __ K_AND __ _propositional
@@ -66,30 +72,32 @@ _propositional = propositional
 propositional = comparitive
 	| value_expr __  K_NOT _ K_NULL
 	| value_expr __ K_IS _ K_NULL
-	| value_expr __ K_NOT _ K_IN _ \( _ args _ \) _
-	| value_expr __ K_IN _ \( _ args _ \) _
-	| value_expr __ K_NOT _ K_IN _ \( _ select_stmt _ \) _
-	| value_expr __ K_IN _ \( _ select_stmt _ \) _
-	| K_NOT _ K_EXISTS _ \( _ select_stmt _ \) _
-	| K_EXISTS _ \( _ select_stmt _ \) _
-comparitive = additive _ (\=\=|\=|\!\=|<>) _ additive biop
+	| value_expr __ K_NOT _ K_IN _ \( _ consts _ \)
+	| value_expr __ K_IN _ \( _ consts _ \)
+	| value_expr __ K_NOT _ K_IN _ \( _ select_stmt _ \)
+	| value_expr __ K_IN _ \( _ select_stmt _ \)
+	| K_NOT _ K_EXISTS _ \( _ select_stmt _ \)
+	| K_EXISTS _ \( _ select_stmt _ \)
+comparitive = _additive _ (\=\=|\=|\!\=|<>) _ _additive biop
 	| string __ (?i)(is *not|is|like) __ string biop
-	| additive _ (<=|<|>=|>) _ additive biop
-	| additive __ K_BETWEEN __ additive __ K_AND __ additive
-	| additive __ K_NOT __ K_BETWEEN __ additive __ K_AND __ additive
-additive = multiplicative _ (\+|-) _ additive biops
-	| additive biops
-multiplicative = factor _ (\*|/|%) _ multiplicative biops
-	| factor biops
+	| _additive _ (<=|<|>=|>) _ _additive biop
+	| _additive __ K_BETWEEN __ _additive __ K_AND __ _additive
+	| _additive __ K_NOT __ K_BETWEEN __ _additive __ K_AND __ _additive
+_additive = additive biops
+additive = _multiplicative _ (\+|-) _ additive
+	| _multiplicative
+_multiplicative = multiplicative biops
+multiplicative = factor _ (\*|/|%) _ multiplicative
+	| factor
 factor = NUMERIC_LITERAL
 	| dynamic
-	| _ \( _ additive _ \) _
-	| unary_operator additive
+	| \( _ _additive _ \)
+	| unary_operator _additive
 string = STRING_LITERAL
 	| dynamic
-dynamic = column_name
+dynamic = K_NULL
+	| K_CAST _ \( _ expr K_AS type_name _ \)
 	| table_name DOT column_name
-	| K_CAST _ \( _ expr K_AS type_name _ \) _
-	| K_NULL
+	| column_name
 	| BIND_PARAMETER
 unary_operator = (-)
