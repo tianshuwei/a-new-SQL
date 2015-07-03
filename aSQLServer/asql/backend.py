@@ -36,3 +36,6 @@ def rename_table(tname, tname_new, dbname):
 
 def edit_table(tname, cname, columnspec, dbname):
 	pass
+
+def drop_table(tname, dbname):
+	pass

@@ -1,7 +1,7 @@
 K_ALTER = (?i)(?:edit)
 K_TABLE = (?i)(?:table)
 K_RENAME = (?i)(?:rename)
-K_DROP = (?i)(drop)
+K_DROP = (?i)(?:drop)
 K_CREATE = (?i)(?:create)
 K_IN = (?i)(?:in)
 K_INTO = (?i)(?:into)
