@@ -22,3 +22,11 @@ def create_table(name, num, tablespec):   #表名char[20]，字段数，字段�
 		print e
 
 def list_table(name):
+	#..
+
+
+def test():
+	#..
+
+if __name__ == '__main__':
+	test()
