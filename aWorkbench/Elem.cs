@@ -12,12 +12,12 @@ namespace aWorkbench
 		private string strVal;
 		private VALTYPE _type;
 		public VALTYPE type {get { return _type; }}
-		Elem(int n) {
+		public Elem(int n) {
 			numVal = n;
 			strVal = null;
 			_type = VALTYPE.INT;
 		}
-		Elem(string str) {
+		public Elem(string str) {
 			numVal = null;
 			strVal = (string)str.Clone();
 			_type = VALTYPE.STRING;
