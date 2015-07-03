@@ -1,10 +1,14 @@
 # -*- coding: utf8 -*-
-import struct
+import struct,collections,traceback,string
+import os,sys
+
+i_def=struct.calcsize("20si")
+i_col=struct.calcsize("20s8si???")
 
 def create_table(tablespec, dbname):
 	try:
 		bwfile=open('%s.dbf'%dbname,'ab')
-		content1 = struct.pack("c20si",'~',tablespec.tname,len(tablespec.columns))
+		content1 = struct.pack("20si",tablespec.tname,len(tablespec.columns))
 		bwfile.write(content1)
 		# typedef struct {
 		#   char sFieldName[20];  //字段名
@@ -20,21 +24,100 @@ def create_table(tablespec, dbname):
 		bwfile.flush()
 		bwfile.close()
 	except Exception,e:
-		print e
+		print traceback.print_exc()
 
 
 def list_columns(tname, dbname):
-	pass
+	try:
+		ret_list=[["FieldName","Type","Size","Key","Null"],]
+		brfile=open('%s.dbf'%dbname,'rb')
+		while True:
+			content1=brfile.read(i_def)
+			#print "hh:"+content1
+			if content1=='\n'or content1=='': return {"ok":0,"result":["There is no such table!\n",]}
+			c1=struct.unpack("20si",content1)
+			#print c1
+			flag = tname==(c1[0].strip('\0'))
+			#print c1[1]
+			for i in range(1,c1[1]+1):
+				content2=brfile.read(i_col)
+				#print i
+				if flag:
+					c2=struct.unpack("20s8si???",content2)
+					li=[]
+					ii=0
+					for cc in c2:
+						if ii<2:
+							li.append(cc.strip('\0'))
+						elif ii>2:
+							li.append(int(cc))
+						else:
+							li.append(cc)
+						ii=ii+1
+					if li.pop():
+						ret_list.append(li)
+			if flag: break
+		brfile.close()
+		return {"ok":1,"result":ret_list}
+	except EOFError:
+		return {"ok":0,"result":["There is no such table!",]}
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
+	except Exception,e:
+		print traceback.print_exc()
 
 def list_tables(dbname):
-	pass
+	try:
+		ret_list=[["TableName",],]
+		brfile=open('%s.dbf'%dbname,'rb')
+		content1=brfile.read(i_def)
+		#if content1=='' : return {"ok":0,"result":["There is no table in this database!",]}
+		while content1 != '':
+			c1=struct.unpack("20si",content1)
+			tname=c1[0]
+			ret_list.append([tname.strip('\0'),])
+			for i in range(1,c1[1]+1):
+				content2=brfile.read(i_col)
+			content1=brfile.read(i_def)
+		brfile.close()
+		return {"ok":1,"result":ret_list}
+	except EOFError:
+		pass
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
+	except Exception,e:
+		print traceback.print_exc()
+
+def endWith(s,*endstring):
+		array = map(s.endswith,endstring)
+		if True in array:
+				return True
+		else:
+				return False
 
 def list_databases():
-	pass
+	try:
+		list_file = os.listdir(os.path.dirname(os.path.abspath(__file__)))
+		s = os.listdir(os.path.dirname(os.path.abspath(__file__)))
+		f_file = [["DatabaseName",],]
+		for i in list_file:
+				if endWith(i,'.dbf'):
+						f_file.append([i[:-4],])
+		return {"ok":1,"result":f_file}
+
+	except Exception,e:
+		print traceback.print_exc()
+
+
 
 
 def test():
-	pass
+	c1=("id","int",4,True,False,True)
+	c2=("name","string",20,False,True,True)
+	columns=[c1,c2]
+	tablespec=collections.namedtuple('tablespec','tname columns')
+	t=tablespec(tname="tab1",columns=columns)
+	create_table(t,"test")
 
 if __name__ == '__main__':
-	test()
+	print list_databases()
