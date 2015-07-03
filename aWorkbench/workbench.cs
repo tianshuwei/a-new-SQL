@@ -132,7 +132,7 @@ namespace aWorkbench
                 MessageBox.Show(result); return;
             }
             string[] tables = result.Split(new char[] { ',' });
-            aWorkbench.Elem resultSet = new aWorkbench.resultSet(jsonString,null);
+            //aWorkbench.Elem resultSet = new aWorkbench.resultSet(jsonString,null);
 
 
 		}
