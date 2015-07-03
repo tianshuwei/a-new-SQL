@@ -17,14 +17,14 @@ alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_I
 rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ database_name mk_rename_table
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_drop_table
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ _insert_values _ K_IN __ database_name mk_insert
-delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ boolean_expr __ K_IN __ database_name
-update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ boolean_expr __ K_IN __ database_name
+delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ _boolean_expr __ K_IN __ database_name
+update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name
 select_stmt = select_core __ K_IN __ database_name
 list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
 	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
 	| K_LIST __ (?i)(?:databases) mk_list_databases
-dummy_stmt = \s*
-select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ boolean_expr
+dummy_stmt = _
+select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ _boolean_expr
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
@@ -35,7 +35,7 @@ assignments = assignment COMMA assignments
 columns = column_name COMMA columns
 	| column_name
 	| (\*)
-assignment = column_name EQUAL value_expr
+assignment = column_name EQU value_expr
 column_def = column_name __ type_name __ column_constraint __ valid_flag mk_columnIV
 	| column_name __ type_name __ column_constraint mk_columnI
 	| column_name __ type_name __ valid_flag mk_columnII
@@ -54,7 +54,7 @@ valid_flag = (?i)(valid) mk_valid
 any_name = IDENTIFIER
 	| `([^`]+)`
 expr = value_expr
-	| boolean_expr
+	| _boolean_expr
 _insert_values = insert_values hug
 insert_values = insert_value COMMA insert_values
 	| insert_value
@@ -62,27 +62,29 @@ insert_value = \( _ consts _ \) hug
 const_expr = string
 	| _additive calc
 value_expr = string
-	| _additive
-boolean_expr = conjuctional __ K_OR __ conjuctional
-	| conjuctional
-conjuctional = _propositional __ K_AND __ _propositional
+	| _additive hug
+_boolean_expr = boolean_expr biops
+boolean_expr = _conjuctional __ K_OR __ boolean_expr
+	| _conjuctional
+_conjuctional = conjuctional biops
+conjuctional = _propositional __ K_AND __ conjuctional
 	| _propositional
-_propositional = propositional
-	| K_NOT __ propositional
-propositional = comparitive
-	| value_expr __  K_NOT _ K_NULL
-	| value_expr __ K_IS _ K_NULL
+_propositional = K_NOT __ propositional mk_op_not
+	| propositional
+propositional = value_expr __  K_NOT _ K_NULL mk_op_null
+	| value_expr __ K_IS _ K_NULL mk_op_null
 	| value_expr __ K_NOT _ K_IN _ \( _ consts _ \)
 	| value_expr __ K_IN _ \( _ consts _ \)
 	| value_expr __ K_NOT _ K_IN _ \( _ select_stmt _ \)
 	| value_expr __ K_IN _ \( _ select_stmt _ \)
+	| comparitive
 	| K_NOT _ K_EXISTS _ \( _ select_stmt _ \)
 	| K_EXISTS _ \( _ select_stmt _ \)
 comparitive = _additive _ (\=\=|\=|\!\=|<>) _ _additive biop
-	| string __ (?i)(is *not|is|like) __ string biop
+	| string __ (?i)(is[\x20]*not|is|like) __ string biop
 	| _additive _ (<=|<|>=|>) _ _additive biop
-	| _additive __ K_BETWEEN __ _additive __ K_AND __ _additive
-	| _additive __ K_NOT __ K_BETWEEN __ _additive __ K_AND __ _additive
+	| _additive __ K_BETWEEN __ _additive __ (?i)(?:and) __ _additive mk_op_between
+	| _additive __ K_NOT __ K_BETWEEN __ _additive __ (?i)(?:and) __ _additive mk_op_between
 _additive = additive biops
 additive = _multiplicative _ (\+|-) _ additive
 	| _multiplicative
@@ -97,7 +99,7 @@ string = STRING_LITERAL
 	| dynamic
 dynamic = K_NULL
 	| K_CAST _ \( _ expr K_AS type_name _ \)
-	| table_name DOT column_name
-	| column_name
+	| table_name (\.) column_name join mk_ref
+	| column_name mk_ref
 	| BIND_PARAMETER
 unary_operator = (-)

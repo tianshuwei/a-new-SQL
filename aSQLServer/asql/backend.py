@@ -45,3 +45,20 @@ def insert(tname, values, dbname):
 					(2, "bradley", None),
 					(3, "duffy", "warwick avenue")) """
 	pass
+
+def delete(tname, test, dbname):
+	"""test: e.g.
+	# for each record:
+		# you need some function equivalent to this:
+		def relation(field_name):
+			mapping={
+				"col1": 100,
+				"col2": "haha",
+			}
+			return mapping[field_name]
+
+		# then you use `test` like:
+		if test(relation):
+			delete this record
+	"""
+	pass

@@ -25,6 +25,10 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_list_databases=sbind(list_databases), mk_rename_table=sbind(rename_table),
 	mk_alter_table=lambda *ts: (edit_table, (ts[0], ts[1][0], ts[1], ts[2])),
 	mk_drop_table=sbind(drop_table), mk_insert=sbind(insert),
+	mk_op_not=lambda *ts: V('!', ts[1]),
+	mk_op_null=lambda *ts: V('!?' if ts[1].upper()=="NOT" else '?', ts[0]),
+	mk_op_between=lambda *ts: V("!><", ts[0], ts[3], ts[4]) if ts[1].upper()=="NOT" else V("><", ts[0], ts[2], ts[3]),
+	mk_ref=lambda *ts: "ref<%s>"%ts[0],
 	**more_lambdas)
 
 def execute(sql):
@@ -33,5 +37,6 @@ def execute(sql):
 		else: print r
 
 if __name__ == '__main__':
+	print os.path.abspath(__file__)
 	for stmt in parse(G(sys.argv[1])):
 		print stmt

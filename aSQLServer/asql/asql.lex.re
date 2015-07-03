@@ -7,12 +7,13 @@ K_IN = (?i)(?:in)
 K_INTO = (?i)(?:into)
 K_INSERT = (?i)(?:insert)
 K_VALUES = (?i)(?:values)
-K_DELETE = (?i)(delete)
+K_DELETE = (?i)(?:delete)
 K_FROM = (?i)(?:from)
-K_WHERE = (?i)(where)
+K_WHERE = (?i)(?:where)
 K_UPDATE = (?i)(update)
 K_SET = (?i)(set)
 K_NOT = (?i)(not)
+K_BETWEEN = (?i)(between)
 K_AND = (?i)(and)
 K_OR = (?i)(or)
 K_CAST = (?i)(cast)
@@ -24,9 +25,8 @@ K_LIST = (?i)(?:list)
 K_NULL = (?i)(null) const_null
 SEMICOLON = _ ; _
 COMMA = _ , _
-EQUAL = _ \= _
-DOT = _ \. _
-BIND_PARAMETER = @ IDENTIFIER
+EQU = _ \= _
+BIND_PARAMETER = @ IDENTIFIER const_null
 IDENTIFIER = ([a-zA-Z_][a-zA-Z_0-9]*)
 NUMERIC_LITERAL = (\d+) int
 STRING_LITERAL = " chars " join
