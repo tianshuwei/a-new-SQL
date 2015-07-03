@@ -33,3 +33,6 @@ def list_databases():
 
 def rename_table(tname, tname_new, dbname):
 	pass
+
+def edit_table(tname, cname, columnspec, dbname):
+	pass

@@ -13,7 +13,7 @@ sql_stmt = create_table_stmt
 	| list_stmt
 	| dummy_stmt
 create_table_stmt = K_CREATE __ K_TABLE __ table_name _ \( _ _column_defs _ \) _ K_INTO __ database_name mk_create_table
-alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_IN __ database_name
+alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_IN __ database_name mk_alter_table
 rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ database_name mk_rename_table
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ \( _ args _ \) _ K_IN __ database_name
