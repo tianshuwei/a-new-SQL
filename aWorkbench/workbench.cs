@@ -17,7 +17,7 @@ namespace aWorkbench
 		public workbench()
 		{
 			InitializeComponent();
-			con = new aSQLConnector("localhost", 3306);
+			con = new aSQLConnector("127.0.0.1", 3306);
 			dataGridResult.Columns.Add("col2", "col2");
 			
 		}
@@ -90,11 +90,7 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
-			//string jsonString = con.send("list tables;");
-			// return {ok:0/1,result:...}
-            //aSQLConnector.jsonResult
-
-			string jsonString = "{'ok':1,result:['table1','table2','table3']}";//ok,result类型是string还是char？
+			string jsonString = "{'ok':1,result:['table1','table2','table3']}";
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
@@ -117,12 +113,10 @@ namespace aWorkbench
                 foreach (string name in coltables) { }
             }
 		}
-		
 
 		private void runCmds(object sender, EventArgs e)
 		{
             string cmds = txtScripts.Text;
-
             //todo
             string jsonString = "{'ok':1,result:['table1','table2','table3']}";//ok,result类型是string还是char？
             JObject jr = JSON.fromJson(jsonString);
@@ -133,8 +127,6 @@ namespace aWorkbench
             }
             string[] tables = result.Split(new char[] { ',' });
             //aWorkbench.Elem resultSet = new aWorkbench.resultSet(jsonString,null);
-
-
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
@@ -154,24 +146,18 @@ namespace aWorkbench
             {
                 //进行后续处理
             }
-
 		}
-
         private void txtScripts_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void dataGridResult_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
 		}
-
         private void treeTable_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
         }
-
-
 	}
 }
