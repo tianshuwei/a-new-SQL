@@ -17,7 +17,7 @@ namespace aWorkbench
 		public workbench()
 		{
 			InitializeComponent();
-			con = aSQLConnector.getInstance("127.0.0.1", 3306);
+			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
 			//dataGridResult.Columns.Add("col2", "col2");
             resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
 		}
