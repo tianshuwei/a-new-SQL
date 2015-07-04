@@ -1,5 +1,5 @@
 # Copyright 2015 Alex Yang <aleozlx@126.com>
-import peglet, os, collections
+import peglet, os, collections, re
 from parser_helper import Vector as V, G, more_lambdas, sbind
 from backend import *
 sizeof={ 'int': 4 }
@@ -29,19 +29,30 @@ class TypeCast(object):
 def _eval(value_expr, R):
 	pass
 
+LIKE_contains = re.compile(r'^\%(.+)\%$')
+LIKE_endswith = re.compile(r'^%(.+)$')
+LIKE_startswith = re.compile(r'^(.+)%$')
+
 def mk_test(_boolean_expr):
 	e = _boolean_expr
 	if not isinstance(e, Vector): return
 	def test(R):
 		o = e[0]
-		t=lambda e: mk_test(e)(R)
-		v=lambda e: _eval(e, R)
+		t = lambda e: mk_test(e)(R)
+		v = lambda e: _eval(e, R)
 		if o is 'or': return t(e[1]) or t(e[2])
 		elif o is 'and': return t(e[1]) and t(e[2])
 		elif o is '!': return not t(e[1])
 		elif o in ['=','==','is']: return v(e[1]) == v(e[2])
 		elif o in ['<>','!=','isnot']: return v(e[1]) != v(e[2])
-		elif o is 'like': return False
+		elif o is 'like':
+			m=LIKE_contains.match(e[2])
+			if m: return m.group(1) in v(e[1])
+			m=LIKE_startswith.match(e[2])
+			if m: return v(e[1]).startswith(m.group(1))
+			m=LIKE_endswith.match(e[2])
+			if m: return v(e[1]).endswith(m.group(1))
+			return v(e[1]) == e[2]
 		elif o is '<': return v(e[1]) < v(e[2])
 		elif o is '>=': return v(e[1]) >= v(e[2])
 		elif o is '>': return v(e[1]) > v(e[2])
@@ -52,14 +63,10 @@ def mk_test(_boolean_expr):
 		elif o is '!><':
 			a, b = v(e[2]), v(e[3])
 			return not (min(a,b) <= v(e[1]) <= max(a,b))
-		elif o is 'in':
-			return False
-		elif o is '!in':
-			return False
-		elif o is '?':
-			return False
-		elif o is '!?':
-			return False
+		elif o is 'in': return v(e[1]) in e[2]
+		elif o is '!in': return v(e[1]) not in e[2]
+		elif o is '?': return v(e[1]) is None
+		elif o is '!?': return v(e[1]) is not None
 	return test
 
 parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
