@@ -46,10 +46,12 @@ namespace aWorkbench
 
 		public override bool Equals(object obj)
 		{
-			try {
+			try
+			{
 				if (((Elem)obj).type != this.type) return false;
 				return ((Elem)obj).value == this.value;
-            }
+			}
+			catch { }
 			return base.Equals(obj);
 		}
 

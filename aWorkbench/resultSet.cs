@@ -16,8 +16,8 @@ namespace aWorkbench
             keys = new List<string>();
             //foreach() key-type into keys
             values = new List<List<Elem>>();
-            // foreach  values.Add(new List<string>(???))
-
+			// foreach  values.Add(new List<string>(???))
+			
             string[] str = jsonString.Split(new char[2] { '[', ']' });
             foreach (string s in str)
             {
