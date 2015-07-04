@@ -65,12 +65,12 @@
             this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewTab = new System.Windows.Forms.TabPage();
-            this.dataGridResult = new System.Windows.Forms.DataGridView();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.filesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.statusStrip.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -95,7 +95,6 @@
             this.tabs.SuspendLayout();
             this.consoleTab.SuspendLayout();
             this.viewTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -412,7 +411,7 @@
             // 
             // viewTab
             // 
-            this.viewTab.Controls.Add(this.dataGridResult);
+            this.viewTab.Controls.Add(this.listView1);
             this.viewTab.Location = new System.Drawing.Point(4, 26);
             this.viewTab.Margin = new System.Windows.Forms.Padding(2);
             this.viewTab.Name = "viewTab";
@@ -421,17 +420,6 @@
             this.viewTab.TabIndex = 1;
             this.viewTab.Text = "views";
             this.viewTab.UseVisualStyleBackColor = true;
-            // 
-            // dataGridResult
-            // 
-            this.dataGridResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridResult.Location = new System.Drawing.Point(2, 2);
-            this.dataGridResult.Margin = new System.Windows.Forms.Padding(2);
-            this.dataGridResult.Name = "dataGridResult";
-            this.dataGridResult.RowTemplate.Height = 27;
-            this.dataGridResult.Size = new System.Drawing.Size(729, 231);
-            this.dataGridResult.TabIndex = 0;
             // 
             // menuStrip
             // 
@@ -473,6 +461,14 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 21);
             this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // listView1
+            // 
+            this.listView1.Location = new System.Drawing.Point(0, 0);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(600, 236);
+            this.listView1.TabIndex = 0;
+            this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // workbench
             // 
@@ -518,7 +514,6 @@
             this.tabs.ResumeLayout(false);
             this.consoleTab.ResumeLayout(false);
             this.viewTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -547,8 +542,7 @@
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Label lblDatabase;
-		private System.Windows.Forms.Label lblDatabaseName;
-		private System.Windows.Forms.DataGridView dataGridResult;
+        private System.Windows.Forms.Label lblDatabaseName;
 		private System.Windows.Forms.ContextMenuStrip menuStripEditTable;
 		private System.Windows.Forms.ToolStripMenuItem addTableToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
@@ -559,6 +553,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripbtnCpy;
 		private System.Windows.Forms.TextBox txtScripts;
 		private System.Windows.Forms.ToolStripMenuItem todoToolStripMenuItem;
+        private System.Windows.Forms.ListView listView1;
 	}
 }
 
