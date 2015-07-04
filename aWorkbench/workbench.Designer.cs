@@ -29,14 +29,14 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("▷ col1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("▷ col2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("☷ TableA", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
-            treeNode3});
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("▷ col1");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("▷ col2");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("☷ TableA", new System.Windows.Forms.TreeNode[] {
+            treeNode5,
+            treeNode6});
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
+            treeNode7});
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "233",
             "12"}, -1);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -65,12 +65,12 @@
             this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewTab = new System.Windows.Forms.TabPage();
+            this.listViewResult = new System.Windows.Forms.ListView();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.filesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.statusStrip.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -222,16 +222,16 @@
             this.treeTable.Location = new System.Drawing.Point(0, 0);
             this.treeTable.Margin = new System.Windows.Forms.Padding(2);
             this.treeTable.Name = "treeTable";
-            treeNode1.Name = "col1";
-            treeNode1.Text = "▷ col1";
-            treeNode2.Name = "col2";
-            treeNode2.Text = "▷ col2";
-            treeNode3.Name = "TableA";
-            treeNode3.Text = "☷ TableA";
-            treeNode4.Name = "ndeTable";
-            treeNode4.Text = "Tables";
+            treeNode5.Name = "col1";
+            treeNode5.Text = "▷ col1";
+            treeNode6.Name = "col2";
+            treeNode6.Text = "▷ col2";
+            treeNode7.Name = "TableA";
+            treeNode7.Text = "☷ TableA";
+            treeNode8.Name = "ndeTable";
+            treeNode8.Text = "Tables";
             this.treeTable.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode8});
             this.treeTable.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.treeTable.Size = new System.Drawing.Size(152, 290);
             this.treeTable.TabIndex = 0;
@@ -390,7 +390,7 @@
             this.lstConsoleMsg.FullRowSelect = true;
             this.lstConsoleMsg.GridLines = true;
             this.lstConsoleMsg.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.lstConsoleMsg.Location = new System.Drawing.Point(2, 2);
             this.lstConsoleMsg.Margin = new System.Windows.Forms.Padding(2);
             this.lstConsoleMsg.Name = "lstConsoleMsg";
@@ -411,7 +411,7 @@
             // 
             // viewTab
             // 
-            this.viewTab.Controls.Add(this.listView1);
+            this.viewTab.Controls.Add(this.listViewResult);
             this.viewTab.Location = new System.Drawing.Point(4, 26);
             this.viewTab.Margin = new System.Windows.Forms.Padding(2);
             this.viewTab.Name = "viewTab";
@@ -420,6 +420,16 @@
             this.viewTab.TabIndex = 1;
             this.viewTab.Text = "views";
             this.viewTab.UseVisualStyleBackColor = true;
+            // 
+            // listViewResult
+            // 
+            this.listViewResult.GridLines = true;
+            this.listViewResult.Location = new System.Drawing.Point(0, 0);
+            this.listViewResult.Name = "listViewResult";
+            this.listViewResult.Size = new System.Drawing.Size(600, 236);
+            this.listViewResult.TabIndex = 0;
+            this.listViewResult.UseCompatibleStateImageBehavior = false;
+            this.listViewResult.View = System.Windows.Forms.View.Details;
             // 
             // menuStrip
             // 
@@ -461,14 +471,6 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 21);
             this.aboutToolStripMenuItem.Text = "About";
-            // 
-            // listView1
-            // 
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(600, 236);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // workbench
             // 
@@ -553,7 +555,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripbtnCpy;
 		private System.Windows.Forms.TextBox txtScripts;
 		private System.Windows.Forms.ToolStripMenuItem todoToolStripMenuItem;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewResult;
 	}
 }
 

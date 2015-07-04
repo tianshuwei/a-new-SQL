@@ -10,14 +10,16 @@ namespace aWorkbench
 	class resultSet
 	{
 		string tableName;
-		List<string> keys;
-		List<List<Elem>> values;
+        private List<string> _keys;
+        private List<List<Elem>> _values;
+        public List<string> keys { get { return _keys; } }
+        public List<List<Elem>> values { get { return _values; } }
 		public resultSet(string jsonString,string tablename) {
             tableName = tablename;
             //get key array
-            keys = new List<string>();
+            _keys = new List<string>();
             //foreach() key-type into keys
-            values = new List<List<Elem>>();
+            _values = new List<List<Elem>>();
             // foreach  values.Add(new List<string>(???))
 
             jsonString = "{\"ok\":1, \"result\":[[\"id\",\"username\"],[1,\"john\"]]}";
@@ -32,7 +34,7 @@ namespace aWorkbench
             for (int i = 0; i < colarray.Count; i++)
             {
                 string s = colarray[i].ToString();
-                keys.Add(s);
+                _keys.Add(s);
             }
             //for循环塞values
             for (int i = 1; i < jares.Count; i++)
@@ -46,7 +48,7 @@ namespace aWorkbench
                     Elem elem = new Elem(xxx);
                     list.Add(elem);
                 }
-                values.Add(list);
+                _values.Add(list);
             }
 		}
 	}

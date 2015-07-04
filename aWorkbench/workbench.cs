@@ -18,9 +18,34 @@ namespace aWorkbench
 		{
 			InitializeComponent();
 			con = new aSQLConnector("127.0.0.1", 3306);
-			dataGridResult.Columns.Add("col2", "col2");
+			//dataGridResult.Columns.Add("col2", "col2");
             resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
 		}
+        public void listviewResult_load(resultSet rs)
+        {
+            listViewResult.GridLines = true;//表格是否显示网格线
+            listViewResult.FullRowSelect = true;//是否选中整行
+            listViewResult.View = View.Details;//设置显示方式
+            listViewResult.Scrollable = true;//是否自动显示滚动条
+            listViewResult.MultiSelect = false;//是否可以选择多行
+
+            //添加表头
+            foreach (string str in rs.keys)
+            {
+                listViewResult.Columns.Add(str);
+            }
+            //添加表格内容
+            foreach(List<Elem> xx in rs.values)
+            {
+                ListViewItem item = new ListViewItem();
+                item.SubItems.Clear();
+                foreach (Elem xxx in xx)
+                {
+                    item.SubItems.Add(xxx.ToString());
+                }
+                listViewResult.Items.Add(item);
+            }
+        }
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -138,7 +163,7 @@ namespace aWorkbench
 		private void openScript(object sender, EventArgs e)
 		{
             OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "*.sql"; //过滤文件类型
+            fd.Filter = "(*.*)|*.*"; //过滤文件类型
             fd.InitialDirectory = Application.StartupPath + "\\Temp\\";//设定初始目录
             fd.ShowReadOnly = false; //设定文件是否只读
             DialogResult r = fd.ShowDialog();
