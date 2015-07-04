@@ -132,27 +132,31 @@ namespace aWorkbench
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
+            //database_name
+            string databaseName = "xx";
+            TreeNode tn1 = treeTable.Nodes.Add(databaseName);
+            //table_name&col_name
 			string jsonString = "{'ok':1,result:['table1','table2','table3']}";
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
 
 			if ("0".Equals(ok)) { MessageBox.Show(result); return; }
-            string[] tables = result.Split(new char[] { ',' });
-            foreach (string tablename in tables)
+            JArray jares = (JArray)JsonConvert.DeserializeObject(result);
+            for (int i = 0; i < jares.Count; i++)
             {
-                TreeNode nodeChild = new TreeNode();
-                nodeChild.Text = tablename;
-                treeTable.Nodes.Add(nodeChild);
+                TreeNode tn2 = new TreeNode(jares[i].ToString());
+                tn1.Nodes.Add(tn2);
 
-                string colname = "{'ok':1,result:['table1','table2','table3']}";
-                JObject cn = JSON.fromJson(colname);
-                string ok2 = jr["ok"].ToString();
-                string result2 = jr["result"].ToString();
-
-                if (ok2 == "0") { MessageBox.Show(result); return; }
-                string[] coltables = result2.Split(new char[] { ',' });
-                foreach (string name in coltables) { }
+                string colname = "{'ok':1,result:['col1','col2','col3']}";
+                JObject jrcol = JSON.fromJson(colname);
+                string result2 = jrcol["result"].ToString();
+                JArray jacol = (JArray)JsonConvert.DeserializeObject(result2);
+                for (int j = 0; j < jacol.Count; j++)
+                {
+                    TreeNode tn3 = new TreeNode(jacol[i].ToString());
+                    tn2.Nodes.Add(tn3);
+                }
             }
 		}
 
@@ -172,7 +176,7 @@ namespace aWorkbench
 		private void openScript(object sender, EventArgs e)
 		{
             OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "(*.*)|*.*"; //过滤文件类型  TODO 张徐前 只允许打开.sql文件
+            fd.Filter = "(*.sql)|*.sql"; //过滤文件类型  TODO 只允许打开.sql文件
             fd.InitialDirectory = Application.StartupPath + "\\Temp\\";//设定初始目录
             fd.ShowReadOnly = false; //设定文件是否只读
             DialogResult r = fd.ShowDialog();
