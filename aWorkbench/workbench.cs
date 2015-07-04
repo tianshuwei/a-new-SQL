@@ -68,50 +68,67 @@ namespace aWorkbench
             if (e.Node == null) return;
 			if (e.Button == MouseButtons.Right)
 			{
-				switch (e.Node.Level) {
+                switch (e.Node.Level)
+                {
 					case 0://顶层 Tables
-                        int xx=e.Node.TreeView.SelectedNode.GetNodeCount(true);
-                        string[] tables=new string[20];
+                        int xx = e.Node.TreeView.SelectedNode.GetNodeCount(true);
+                        string[] tables = new string[20];
                         for (int i = 0; i < xx; i++)
                         {
                             tables[i] = "drop " + e.Node.TreeView.Nodes[i].Text;
-                            ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tables[i]);
-                            tsmi1.Click += new System.EventHandler(
+                            ToolStripMenuItem tsmi = new ToolStripMenuItem(tables[i]);
+                            tsmi.Click += new System.EventHandler(
                                 (object _sender, EventArgs _e) =>
                                 {
+                                    string ipString = aWorkbench.cfg.ip;
+                                    int port = aWorkbench.cfg.port;
+                                    aWorkbench.aSQLConnector senddrop = new aWorkbench.aSQLConnector(ipString, port);
+                                    senddrop.send(tables[i], true);
                                     //do something
                                 }
                                 );
                             menuStripEditTable.Items.RemoveAt(0);
-                            menuStripEditTable.Items.Insert(0, tsmi1);
+                            menuStripEditTable.Items.Insert(0, tsmi);
                             break;
                         }
 						break;
 					case 1:// TableA
                         string tableA = "drop " + e.Node.Text;
-                        ToolStripMenuItem tsmi2 = new ToolStripMenuItem(tableA);
-						tsmi2.Click += new System.EventHandler(
-							(object _sender, EventArgs _e) => {
-								//do something
+                        ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tableA);
+                        tsmi1.Click += new System.EventHandler(
+                            (object _sender, EventArgs _e) =>
+                            {
+                                string ipString = aWorkbench.cfg.ip;
+                                int port = aWorkbench.cfg.port;
+                                aWorkbench.aSQLConnector senddrop = new aWorkbench.aSQLConnector(ipString, port);
+                                senddrop.send(tableA, true);
+
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
-						menuStripEditTable.Items.Insert(0, tsmi2);
+                        menuStripEditTable.Items.Insert(0, tsmi1);
 						break;
 					case 2://col1
-						ToolStripMenuItem tsmi = new ToolStripMenuItem("remove col " + e.Node.Text);
-						tsmi.Click += new System.EventHandler(
-							(object _sender, EventArgs _e) => {
+                        string rcol = "remove col " + e.Node.Text;
+                        ToolStripMenuItem tsmi2 = new ToolStripMenuItem(rcol);
+                        tsmi2.Click += new System.EventHandler(
+                            (object _sender, EventArgs _e) =>
+                            {
+                                string ipString = aWorkbench.cfg.ip;
+                                int port = aWorkbench.cfg.port;
+                                aWorkbench.aSQLConnector senddrop = new aWorkbench.aSQLConnector(ipString, port);
+                                senddrop.send(rcol, true);
 								//do something
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
-						menuStripEditTable.Items.Insert(0, tsmi);
+                        menuStripEditTable.Items.Insert(0, tsmi2);
 						break;
 				}
 			}
 
 		}
+
 
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
