@@ -7,7 +7,7 @@ delete from t1
 	in parser_test;
 
 delete from t1
-	where id<100
+	where id<50 and not id>60
 	in parser_test;
 
 delete from t3

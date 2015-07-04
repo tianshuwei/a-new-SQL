@@ -26,6 +26,42 @@ class TypeCast(object):
 	def __repr__(self):
 		return "TypeCast(%s,%s)"%(repr(self.type_name),repr(self.var))
 
+def _eval(value_expr, R):
+	pass
+
+def mk_test(_boolean_expr):
+	e = _boolean_expr
+	if not isinstance(e, Vector): return
+	def test(R):
+		o = e[0]
+		t=lambda e: mk_test(e)(R)
+		v=lambda e: _eval(e, R)
+		if o is 'or': return t(e[1]) or t(e[2])
+		elif o is 'and': return t(e[1]) and t(e[2])
+		elif o is '!': return not t(e[1])
+		elif o in ['=','==','is']: return v(e[1]) == v(e[2])
+		elif o in ['<>','!=','isnot']: return v(e[1]) != v(e[2])
+		elif o is 'like': return False
+		elif o is '<': return v(e[1]) < v(e[2])
+		elif o is '>=': return v(e[1]) >= v(e[2])
+		elif o is '>': return v(e[1]) > v(e[2])
+		elif o is '<=': return v(e[1]) <= v(e[2])
+		elif o is '><':
+			a, b = v(e[2]), v(e[3])
+			return min(a,b) <= v(e[1]) <= max(a,b)
+		elif o is '!><':
+			a, b = v(e[2]), v(e[3])
+			return not (min(a,b) <= v(e[1]) <= max(a,b))
+		elif o is 'in':
+			return False
+		elif o is '!in':
+			return False
+		elif o is '?':
+			return False
+		elif o is '!?':
+			return False
+	return test
+
 parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	hug = peglet.hug, join = peglet.join,
 	mk_columnI=lambda *ts:columnspec(cname=ts[0],type=ts[1][0],size=ts[1][1],key=ts[2][0],null=ts[2][1],valid=True),
