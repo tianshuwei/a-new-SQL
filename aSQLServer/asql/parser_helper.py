@@ -40,11 +40,12 @@ biops=lambda o, x: biops(V(*o[1:]), V(biop(x[0], operator(o[0]), x[1]), *x[2:]))
 sbind=lambda f: lambda *ts: (f, ts)
 more_lambdas=dict(
 	unescape=lambda c: UNESCAPE_CHAR[c] if c in UNESCAPE_CHAR else c,
-	biop = biop,
-	biops = lambda *ts: biops(ts[1::2], ts[::2]),
-	debug = lambda t: "<debug %s>"%t,
-	quote = lambda t:'"%s"'%t,
-	vec = Vector,
-	int = int,
-	calc = calc,
+	biop = biop, biops = lambda *ts: biops(ts[1::2], ts[::2]),
+	debug = lambda t: "<debug %s>"%t, quote = lambda t:'"%s"'%t,
+	vec = Vector, int = int, calc = calc,
 )
+
+def G(fname):
+	import os
+	with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),fname)) as f:
+		return f.read()
