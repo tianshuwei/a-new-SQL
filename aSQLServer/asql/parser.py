@@ -86,9 +86,16 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	**more_lambdas)
 
 def execute(sql):
+	from server import error
+	ret=None
 	for r in parse(sql):
-		if len(r)==2: r[0](*r[1])
-		else: print r
+		if len(r)==2: ret=r[0](*r[1])
+		else:
+			print r
+			return error("parser error") 
+	else:
+		if ret: return ret
+		else: return error("backend error")
 
 if __name__ == '__main__':
 	import sys
