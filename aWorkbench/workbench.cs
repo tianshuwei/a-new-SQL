@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 namespace aWorkbench
 {
 	public partial class workbench : Form
@@ -175,8 +176,12 @@ namespace aWorkbench
             DialogResult r = fd.ShowDialog();
             if (r == DialogResult.OK)
             {
+                txtScripts.Text = string.Empty;
+                StreamReader sr = new StreamReader(fd.FileName);
+                txtScripts.Text = sr.ReadToEnd();
+                sr.Close();
                 //进行后续处理
-				//TODO  张徐前 把文件打开，然后把文件内容载入到输入框（txtScripts）
+				//DID  张徐前 把文件打开，然后把文件内容载入到输入框（txtScripts）
             }
 		}
 
