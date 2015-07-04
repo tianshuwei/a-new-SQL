@@ -29,14 +29,14 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("▷ col1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("▷ col2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("☷ TableA", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
-            treeNode3});
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("▷ col1");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("▷ col2");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("☷ TableA", new System.Windows.Forms.TreeNode[] {
+            treeNode5,
+            treeNode6});
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Tables", new System.Windows.Forms.TreeNode[] {
+            treeNode7});
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "233",
             "12"}, -1);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -65,7 +65,7 @@
             this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewTab = new System.Windows.Forms.TabPage();
-            this.dataGridResult = new System.Windows.Forms.DataGridView();
+            this.listViewResult = new System.Windows.Forms.ListView();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.filesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +95,6 @@
             this.tabs.SuspendLayout();
             this.consoleTab.SuspendLayout();
             this.viewTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -223,16 +222,16 @@
             this.treeTable.Location = new System.Drawing.Point(0, 0);
             this.treeTable.Margin = new System.Windows.Forms.Padding(2);
             this.treeTable.Name = "treeTable";
-            treeNode1.Name = "col1";
-            treeNode1.Text = "▷ col1";
-            treeNode2.Name = "col2";
-            treeNode2.Text = "▷ col2";
-            treeNode3.Name = "TableA";
-            treeNode3.Text = "☷ TableA";
-            treeNode4.Name = "ndeTable";
-            treeNode4.Text = "Tables";
+            treeNode5.Name = "col1";
+            treeNode5.Text = "▷ col1";
+            treeNode6.Name = "col2";
+            treeNode6.Text = "▷ col2";
+            treeNode7.Name = "TableA";
+            treeNode7.Text = "☷ TableA";
+            treeNode8.Name = "ndeTable";
+            treeNode8.Text = "Tables";
             this.treeTable.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode8});
             this.treeTable.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.treeTable.Size = new System.Drawing.Size(152, 290);
             this.treeTable.TabIndex = 0;
@@ -391,7 +390,7 @@
             this.lstConsoleMsg.FullRowSelect = true;
             this.lstConsoleMsg.GridLines = true;
             this.lstConsoleMsg.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.lstConsoleMsg.Location = new System.Drawing.Point(2, 2);
             this.lstConsoleMsg.Margin = new System.Windows.Forms.Padding(2);
             this.lstConsoleMsg.Name = "lstConsoleMsg";
@@ -412,7 +411,7 @@
             // 
             // viewTab
             // 
-            this.viewTab.Controls.Add(this.dataGridResult);
+            this.viewTab.Controls.Add(this.listViewResult);
             this.viewTab.Location = new System.Drawing.Point(4, 26);
             this.viewTab.Margin = new System.Windows.Forms.Padding(2);
             this.viewTab.Name = "viewTab";
@@ -422,16 +421,15 @@
             this.viewTab.Text = "views";
             this.viewTab.UseVisualStyleBackColor = true;
             // 
-            // dataGridResult
+            // listViewResult
             // 
-            this.dataGridResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridResult.Location = new System.Drawing.Point(2, 2);
-            this.dataGridResult.Margin = new System.Windows.Forms.Padding(2);
-            this.dataGridResult.Name = "dataGridResult";
-            this.dataGridResult.RowTemplate.Height = 27;
-            this.dataGridResult.Size = new System.Drawing.Size(729, 231);
-            this.dataGridResult.TabIndex = 0;
+            this.listViewResult.GridLines = true;
+            this.listViewResult.Location = new System.Drawing.Point(0, 0);
+            this.listViewResult.Name = "listViewResult";
+            this.listViewResult.Size = new System.Drawing.Size(600, 236);
+            this.listViewResult.TabIndex = 0;
+            this.listViewResult.UseCompatibleStateImageBehavior = false;
+            this.listViewResult.View = System.Windows.Forms.View.Details;
             // 
             // menuStrip
             // 
@@ -518,7 +516,6 @@
             this.tabs.ResumeLayout(false);
             this.consoleTab.ResumeLayout(false);
             this.viewTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridResult)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -547,8 +544,7 @@
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Label lblDatabase;
-		private System.Windows.Forms.Label lblDatabaseName;
-		private System.Windows.Forms.DataGridView dataGridResult;
+        private System.Windows.Forms.Label lblDatabaseName;
 		private System.Windows.Forms.ContextMenuStrip menuStripEditTable;
 		private System.Windows.Forms.ToolStripMenuItem addTableToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
@@ -559,6 +555,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripbtnCpy;
 		private System.Windows.Forms.TextBox txtScripts;
 		private System.Windows.Forms.ToolStripMenuItem todoToolStripMenuItem;
+        private System.Windows.Forms.ListView listViewResult;
 	}
 }
 
