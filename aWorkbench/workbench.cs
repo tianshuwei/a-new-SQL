@@ -80,10 +80,7 @@ namespace aWorkbench
                             tsmi.Click += new System.EventHandler(
                                 (object _sender, EventArgs _e) =>
                                 {
-                                    string ipString = aWorkbench.cfg.ip;
-                                    int port = aWorkbench.cfg.port;
-                                    aWorkbench.aSQLConnector senddrop = new aWorkbench.aSQLConnector(ipString, port);
-                                    senddrop.send(tables[i], true);
+                                    con.send(tables[i], true);
                                     //do something
                                 }
                                 );
@@ -98,10 +95,7 @@ namespace aWorkbench
                         tsmi1.Click += new System.EventHandler(
                             (object _sender, EventArgs _e) =>
                             {
-                                string ipString = aWorkbench.cfg.ip;
-                                int port = aWorkbench.cfg.port;
-                                aWorkbench.aSQLConnector senddrop = new aWorkbench.aSQLConnector(ipString, port);
-                                senddrop.send(tableA, true);
+                                con.send(tableA, true);
 
                             }
                             );
@@ -116,8 +110,7 @@ namespace aWorkbench
                             {
                                 string ipString = aWorkbench.cfg.ip;
                                 int port = aWorkbench.cfg.port;
-                                aWorkbench.aSQLConnector senddrop = new aWorkbench.aSQLConnector(ipString, port);
-                                senddrop.send(rcol, true);
+                                con.send(rcol, true);
                                 //do something
                             }
                             );

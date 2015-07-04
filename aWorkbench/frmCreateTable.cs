@@ -11,9 +11,13 @@ namespace aWorkbench
 {
     public partial class ComboBoxForm : Form
     {
+        private aSQLConnector con;
         public ComboBoxForm()
         {
             InitializeComponent();
+            con = aSQLConnector.getInstance("127.0.0.1", 3306);
+            //dataGridResult.Columns.Add("col2", "col2");
+            resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
         }
 
         ListViewItem TheListview;                     //选中项的集合对象
@@ -30,13 +34,7 @@ namespace aWorkbench
         //数据初始化
         public void LoadData()
         {
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    ListViewItem lvi = new ListViewItem("新建文本." + (i + 1) + "");    //ListView的首项
-            //    this.listView1.Items.Add(lvi);
-
-            //   // lvi.SubItems.AddRange(new string[] { "有关文本" + (i + 1) + "" + "的文件！", "10M", "2009-08-12" });  //首项的子项集合
-            //}
+           
         }
 
 
@@ -165,14 +163,19 @@ namespace aWorkbench
                 MessageBox.Show("Please set primary key");
                 return;
             }
-            aSQLConnector send = new aSQLConnector();
-            send.send(add, true);
+            con.send(add, true);
 
         }
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int i = Convert.ToInt32(textBox3.Text);
+            listView1.Items.RemoveAt(i);
         }
     }
 }
