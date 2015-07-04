@@ -17,11 +17,11 @@ namespace aWorkbench
 		public workbench()
 		{
 			InitializeComponent();
-			con = new aSQLConnector("127.0.0.1", 3306);
+			con = aSQLConnector.getInstance("127.0.0.1", 3306);
 			//dataGridResult.Columns.Add("col2", "col2");
             resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
 		}
-        public void listviewResult_load(resultSet rs)
+        private void getResult(resultSet rs)
         {
             listViewResult.GridLines = true;//表格是否显示网格线
             listViewResult.FullRowSelect = true;//是否选中整行
@@ -142,16 +142,8 @@ namespace aWorkbench
 		private void runCmds(object sender, EventArgs e)
 		{
             string cmds = txtScripts.Text;
-            //todo
-            string jsonString = "{'ok':1,result:['table1','table2','table3']}";//ok,result类型是string还是char？
-            JObject jr = JSON.fromJson(jsonString);
-            string ok = jr["ok"].ToString();
-            string result = jr["result"].ToString();
-            if ("0".Equals(ok)) {
-                MessageBox.Show(result); return;
-            }
-            string[] tables = result.Split(new char[] { ',' });
-            //aWorkbench.Elem resultSet = new aWorkbench.resultSet(jsonString,null);
+			//todo
+			con.send(cmds);
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
@@ -163,26 +155,20 @@ namespace aWorkbench
 		private void openScript(object sender, EventArgs e)
 		{
             OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "(*.*)|*.*"; //过滤文件类型
+            fd.Filter = "(*.*)|*.*"; //过滤文件类型  TODO 张徐前 只允许打开.sql文件
             fd.InitialDirectory = Application.StartupPath + "\\Temp\\";//设定初始目录
             fd.ShowReadOnly = false; //设定文件是否只读
             DialogResult r = fd.ShowDialog();
             if (r == DialogResult.OK)
             {
                 //进行后续处理
+				//TODO  张徐前 把文件打开，然后把文件内容载入到输入框（txtScripts）
             }
 		}
-        private void txtScripts_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-        private void dataGridResult_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
+		private void setMsg(string type, string msg) { //TODO 把type，msg消息设置到消息框中
 
 		}
-        private void treeTable_AfterSelect(object sender, TreeViewEventArgs e)
-        {
 
-        }
 	}
 }

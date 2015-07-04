@@ -24,6 +24,7 @@ namespace aWorkbench
 		private Queue<String> rcvDta;
 		private Thread recvDataThread;
 		private int sentRequest;
+		private static aSQLConnector instance=null;
 		private STATUS status;
 		internal STATUS Status
 		{
@@ -34,13 +35,18 @@ namespace aWorkbench
 
 		}
 
-		public aSQLConnector(string ipString, int port)  {
+		private aSQLConnector(string ipString, int port)  {
 			this.ip = IPAddress.Parse(ipString);
 			this.port = port;
 			this.sentRequest = 0;
 			status = STATUS.CLOSE;
 			recvDataThread = new Thread(_receive);
         }
+
+		public static aSQLConnector getInstance(string ipString, int port) {
+			if (instance == null) return new aSQLConnector(ipString, port);
+			else return instance;
+		}
 
 		private bool openConnection() {
 			switch (Status) {
