@@ -12,7 +12,7 @@ namespace aWorkbench
 		string tableName;
 		List<string> keys;
 		List<List<Elem>> values;
-		resultSet(string jsonString,string tablename) {
+		public resultSet(string jsonString,string tablename) {
             tableName = tablename;
             //get key array
             keys = new List<string>();
@@ -20,25 +20,34 @@ namespace aWorkbench
             values = new List<List<Elem>>();
             // foreach  values.Add(new List<string>(???))
 
-            jsonString = "'ok':1,result:[['col1','col2'],['11','22'],['33','44']]";
+            jsonString = "{\"ok\":1, \"result\":[[\"id\",\"username\"],[1,\"john\"]]}";
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
-            JArray ja = (JArray)JsonConvert.DeserializeObject(result);
-            JObject o = (JObject)ja[1];
-            //string[] str = jsonString.Split(new char[2] { '[', ']' });
-            //foreach (string s in str)
-            //{
-            //    keys.Add(s);
-            //    string[] str2 = s.Split(new char[1] { ',' });
-            //    List<Elem> list = new List<Elem>();
-            //    foreach (string ss in str2)
-            //    {
-            //        Elem elem = new Elem(ss);
-            //        list.Add(elem);
-            //    }
-            //    values.Add(list);
-            //}
+
+            JArray jares = (JArray)JsonConvert.DeserializeObject(result);
+            string jacol = jares[0].ToString();
+            JArray colarray = (JArray)JsonConvert.DeserializeObject(jacol);
+            //for循环塞keys
+            for (int i = 0; i < colarray.Count; i++)
+            {
+                string s = colarray[i].ToString();
+                keys.Add(s);
+            }
+            //for循环塞values
+            for (int i = 1; i < jares.Count; i++)
+            {
+                List<Elem> list = new List<Elem>();
+                string xx = jares[i].ToString();
+                JArray jaxx = (JArray)JsonConvert.DeserializeObject(xx);
+                for (int j = 0; j < jaxx.Count; j++)
+                {
+                    string xxx = jaxx[j].ToString();
+                    Elem elem = new Elem(xxx);
+                    list.Add(elem);
+                }
+                values.Add(list);
+            }
 		}
 	}
 }

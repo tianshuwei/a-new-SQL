@@ -19,7 +19,7 @@ namespace aWorkbench
 			InitializeComponent();
 			con = new aSQLConnector("127.0.0.1", 3306);
 			dataGridResult.Columns.Add("col2", "col2");
-			
+            resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
 		}
 
 		private void Form1_Load(object sender, EventArgs e)

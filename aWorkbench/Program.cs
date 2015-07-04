@@ -15,7 +15,7 @@ namespace aWorkbench
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new frmCreateTable());
+			Application.Run(new workbench());
 		}
 	}
 }
