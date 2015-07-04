@@ -35,3 +35,7 @@ delete from t1
 delete from t1
 	where cast (id as varchar(20)) is "1"
 	in parser_test;
+
+delete from t1
+	where id > -1
+	in parser_test;

@@ -7,19 +7,27 @@ tablespec=collections.namedtuple('tablespec','tname columns')
 columnspec=collections.namedtuple('columnspec','cname type size key null valid')
 
 class CellRef(object):
+	rule = re.compile(r'((.+)\.)?(.+)')
 	def __init__(self, field_name):
 		super(CellRef, self).__init__()
-		self.field_name = field_name
+		m = CellRef.rule.match(field_name)
+		self.tname = m.group(2)
+		self.cname = m.group(3)
 
 	def __call__(self, relation):
-		return relation(self.field_name)
+		return relation(self.cname)
 
 	def __repr__(self):
-		return "CellRef(%s)"%repr(self.field_name)
+		return "CellRef(%s)"%repr(self.cname)
 
 class TypeCast(object):
 	def __init__(self, (var, type_name)):
 		super(TypeCast, self).__init__()
+		typecasts = {
+			'int': lambda a: int(a) if a!=None else None,
+			'varchar': lambda a: int(a) if a!=None else None,
+		}
+		self.typecast = typecasts[type_name[0]]
 		self.type_name = type_name
 		self.var = var
 
@@ -27,7 +35,22 @@ class TypeCast(object):
 		return "TypeCast(%s,%s)"%(repr(self.type_name),repr(self.var))
 
 def _eval(value_expr, R):
-	pass
+	e = value_expr
+	v = lambda e: _eval(e, R)
+	if isinstance(e, V):
+		o = e[0]
+		if o == '+': return v(e[1])+v(e[2])
+		elif o == '-': return v(e[1])-v(e[2])
+		elif o == '*': return v(e[1])*v(e[2])
+		elif o == '/': return v(e[1])/v(e[2])
+		elif o == '%': return v(e[1])%v(e[2])
+		elif o == 'U-': return -v(e[1])
+	elif isinstance(e, int): return e
+	elif isinstance(e, str): return e
+	elif isinstance(e, CellRef): return e(R)
+	elif isinstance(e, TypeCast):
+		return e.typecast(v(e.var))
+	else: return e
 
 LIKE_contains = re.compile(r'^\%(.+)\%$')
 LIKE_endswith = re.compile(r'^%(.+)$')
@@ -40,12 +63,12 @@ def mk_test(_boolean_expr):
 		o = e[0]
 		t = lambda e: mk_test(e)(R)
 		v = lambda e: _eval(e, R)
-		if o is 'or': return t(e[1]) or t(e[2])
-		elif o is 'and': return t(e[1]) and t(e[2])
-		elif o is '!': return not t(e[1])
+		if o == 'or': return t(e[1]) or t(e[2])
+		elif o == 'and': return t(e[1]) and t(e[2])
+		elif o == '!': return not t(e[1])
 		elif o in ['=','==','is']: return v(e[1]) == v(e[2])
 		elif o in ['<>','!=','isnot']: return v(e[1]) != v(e[2])
-		elif o is 'like':
+		elif o == 'like':
 			m=LIKE_contains.match(e[2])
 			if m: return m.group(1) in v(e[1])
 			m=LIKE_startswith.match(e[2])
@@ -53,20 +76,20 @@ def mk_test(_boolean_expr):
 			m=LIKE_endswith.match(e[2])
 			if m: return v(e[1]).endswith(m.group(1))
 			return v(e[1]) == e[2]
-		elif o is '<': return v(e[1]) < v(e[2])
-		elif o is '>=': return v(e[1]) >= v(e[2])
-		elif o is '>': return v(e[1]) > v(e[2])
-		elif o is '<=': return v(e[1]) <= v(e[2])
-		elif o is '><':
+		elif o == '<': return v(e[1]) < v(e[2])
+		elif o == '>=': return v(e[1]) >= v(e[2])
+		elif o == '>': return v(e[1]) > v(e[2])
+		elif o == '<=': return v(e[1]) <= v(e[2])
+		elif o == '><':
 			a, b = v(e[2]), v(e[3])
 			return min(a,b) <= v(e[1]) <= max(a,b)
-		elif o is '!><':
+		elif o == '!><':
 			a, b = v(e[2]), v(e[3])
 			return not (min(a,b) <= v(e[1]) <= max(a,b))
-		elif o is 'in': return v(e[1]) in e[2]
-		elif o is '!in': return v(e[1]) not in e[2]
-		elif o is '?': return v(e[1]) is None
-		elif o is '!?': return v(e[1]) is not None
+		elif o == 'in': return v(e[1]) in e[2]
+		elif o == '!in': return v(e[1]) not in e[2]
+		elif o == '?': return v(e[1]) == None
+		elif o == '!?': return v(e[1]) != None
 	return test
 
 parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
@@ -90,6 +113,7 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_ref=lambda *ts: CellRef(ts[0]),
 	mk_op_in=lambda *ts: V('!in', ts[0], ts[2]) if isinstance(ts[1],str) and ts[1].upper()=="NOT" else V('in', ts[0], ts[1]),
 	mk_typecast=lambda *ts: TypeCast(ts),
+	mk_delete=sbind(delete),
 	**more_lambdas)
 
 def execute(sql):

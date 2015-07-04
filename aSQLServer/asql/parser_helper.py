@@ -23,24 +23,24 @@ class Vector(list):
 
 def calc(t):
 	if isinstance(t,Vector):
-		return {
-			'+': lambda a,b: calc(a)+calc(b),
-			'-': lambda a,b: calc(a)-calc(b),
-			'*': lambda a,b: calc(a)*calc(b),
-			'/': lambda a,b: calc(a)/calc(b),
-			'%': lambda a,b: calc(a)%calc(b)
-		}[t[0]](t[1],t[2]) if not isinstance(t[0],int) else t[0]
+		if t[0] == '+': return calc(t[1])+calc(t[2])
+		elif t[0] == '-': return calc(t[1])-calc(t[2])
+		elif t[0] == '*': return calc(t[1])*calc(t[2])
+		elif t[0] == '/': return calc(t[1])/calc(t[2])
+		elif t[0] == '%': return calc(t[1])%calc(t[2])
+		elif t[0] == 'U-': return -calc(t[1])
 	else: return t
 
 V=Vector
 UNESCAPE_CHAR={'b':'\b', 'f':'\f', 'n':'\n', 'r':'\r', 't':'\t'}
 operator=lambda s: s.replace('\x20','').lower()
+uop=lambda o,a: V('U'+operator(o), a)
 biop=lambda a,o,b: V(operator(o), a, b)
 biops=lambda o, x: biops(V(*o[1:]), V(biop(x[0], operator(o[0]), x[1]), *x[2:])) if o else x[0]
 sbind=lambda f: lambda *ts: (f, ts)
 more_lambdas=dict(
 	unescape=lambda c: UNESCAPE_CHAR[c] if c in UNESCAPE_CHAR else c,
-	biop = biop, biops = lambda *ts: biops(ts[1::2], ts[::2]),
+	uop = uop, biop = biop, biops = lambda *ts: biops(ts[1::2], ts[::2]),
 	debug = lambda t: "<debug %s>"%t, quote = lambda t:'"%s"'%t,
 	vec = Vector, int = int, calc = calc,
 )

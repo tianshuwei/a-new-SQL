@@ -17,7 +17,7 @@ alter_table_stmt = K_ALTER __ K_TABLE __ table_name _ \( _ column_def _ \) _ K_I
 rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ database_name mk_rename_table
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_drop_table
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ _const_tuples _ K_IN __ database_name mk_insert
-delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ _boolean_expr __ K_IN __ database_name
+delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_delete
 update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name
 select_stmt = select_core __ K_IN __ database_name
 list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
@@ -94,7 +94,7 @@ multiplicative = factor _ (\*|/|%) _ multiplicative
 factor = NUMERIC_LITERAL
 	| dynamic
 	| \( _ _additive _ \)
-	| unary_operator _additive
+	| unary_operator _additive uop
 string = STRING_LITERAL
 	| dynamic
 dynamic = K_NULL const_null

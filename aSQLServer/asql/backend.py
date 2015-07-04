@@ -122,7 +122,9 @@ def insert(tname, values, dbname):
 					(2, "bradley", None),
 					(3, "duffy", "warwick avenue")) """
 
-def delete(tname, test, dbname):
+def delete(tname, where, dbname):
+	from parser import mk_test
+	test = mk_test(where)
 	"""test: e.g.
 	# for each record:
 		# you need some function equivalent to this:
