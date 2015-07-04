@@ -140,6 +140,9 @@ def delete(tname, where, dbname):
 			delete this record
 	"""
 
+def update(tname, assignments, where, dbname):
+	pass
+
 def test():
 	c1=("id","int",4,True,False,True)
 	c2=("name","string",20,False,True,True)

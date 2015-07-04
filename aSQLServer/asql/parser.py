@@ -113,7 +113,7 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_ref=lambda *ts: CellRef(ts[0]),
 	mk_op_in=lambda *ts: V('!in', ts[0], ts[2]) if isinstance(ts[1],str) and ts[1].upper()=="NOT" else V('in', ts[0], ts[1]),
 	mk_typecast=lambda *ts: TypeCast(ts),
-	mk_delete=sbind(delete),
+	mk_delete=sbind(delete), mk_update=sbind(update),
 	**more_lambdas)
 
 def execute(sql):
@@ -130,6 +130,7 @@ def execute(sql):
 
 if __name__ == '__main__':
 	import sys
-	print os.path.abspath(__file__)
-	for stmt in parse(G(sys.argv[1])):
-		print stmt
+	if len(sys.argv)>=2:
+		for fname in sys.argv[1:]:
+			for stmt in parse(G(fname)):
+				print stmt

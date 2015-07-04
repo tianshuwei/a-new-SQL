@@ -18,7 +18,7 @@ rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ d
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_drop_table
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ _const_tuples _ K_IN __ database_name mk_insert
 delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_delete
-update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name
+update_stmt = K_UPDATE __ table_name __ K_SET __ _assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_update
 select_stmt = select_core __ K_IN __ database_name
 list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
 	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
@@ -28,12 +28,13 @@ select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ _boolean
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
+_assignments = assignments hug
 assignments = assignment COMMA assignments
 	| assignment
 columns = column_name COMMA columns
 	| column_name
 	| (\*)
-assignment = column_name EQU value_expr
+assignment = column_name EQU value_expr hug
 column_def = column_name __ type_name __ column_constraint __ valid_flag mk_columnIV
 	| column_name __ type_name __ column_constraint mk_columnI
 	| column_name __ type_name __ valid_flag mk_columnII
