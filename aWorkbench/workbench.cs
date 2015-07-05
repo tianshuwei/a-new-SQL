@@ -147,8 +147,7 @@ namespace aWorkbench
                 TreeNode tn2 = new TreeNode(jares[i].ToString());
                 tn1.Nodes.Add(tn2);
 
-                string sql_col = "list columns from " + jares[i].ToString() + " in " + cfg.databaseName;
-                con.send(sql_col);
+                con.send(String.Format("list columns from {0} in {1};", jares[i].ToString(), cfg.databaseName));
                 string colname = con.receive();
                 //colname = "{'ok':1,result:['col1','col2','col3']}";
                 JObject jrcol = JSON.fromJson(colname);
