@@ -270,7 +270,69 @@ def select(projection, join_expr, where, dbname):
 	pass
 
 def simple_select(tname, dbname):
-	pass
+	try:
+		cols = list_columns(tname,dbname)
+		if cols["ok"]==0 : return cols
+		format_str=format_string(cols["result"][1:])
+		brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
+		rt0=[]
+		rt_lists=[]
+		fo_st=''
+		count=0
+		for col in cols["result"][1:]:
+			rt0.append(col[0])
+			count=count+1
+			fo_st=fo_st+'?'
+		rt_lists.append(rt0)
+		c1 = brfile.read(struct.calcsize('?'))
+		while c1 !='':
+			if struct.unpack("?",c1):
+				rt_list=[]
+				ii=0
+				content1=brfile.read(struct.calcsize('?')*count)
+				un_co1=struct.unpack(fo_st,content1)
+				content2=brfile.read(struct.calcsize(format_str))
+				print format_str
+				un_co2=struct.unpack(format_str,content2)
+				for f in un_co1:
+					if f:
+						rt_list.append(None)
+					else:
+						if cols["result"][ii+1][1]=='string':
+							rt_list.append(un_co2[ii].strip('\0'))
+						else:
+							rt_list.append(un_co2[ii])
+					ii=ii+1
+				rt_lists.append(rt_list)
+			c1 = brfile.read(struct.calcsize('?'))
+		return {"ok":1,"result":rt_lists}
+		# for line in values:
+		# 	li=list(line)
+		# 	null_list=[]
+		# 	format_null=''
+		# 	i=0
+		# 	for e in li:
+		# 		if e == None:
+		# 			null_list.append(True)
+		# 			if cols["result"][i+1][1]=="int": 
+		# 				li[i]=0
+		# 			else:
+		# 				li[i]='None'
+		# 		else:
+		# 			null_list.append(False)
+		# 		i=i+1
+		# 		format_null=format_null+'?'
+		# 	content2 = struct.pack('?'+format_null,True,*null_list)
+		# 	bwfile.write(content2)
+		# 	content2 = struct.pack(format_str,*li)
+		# 	bwfile.write(content2)
+		# bwfile.flush()
+		# bwfile.close()
+		return {"ok":1,"result":[["succeed in insert!",],]}
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
+	except Exception,e:
+		print traceback.print_exc()
 
 def test():
 	c1=("id","int",4,True,False,True)
@@ -287,4 +349,4 @@ def test2():
 	insert("tab11",a,"test1")
 
 if __name__ == '__main__':
-	print list_tables("test1")
+	print simple_select("tab1","test1")
