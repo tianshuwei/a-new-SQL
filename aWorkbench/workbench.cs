@@ -50,13 +50,18 @@ namespace aWorkbench
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+            con.send("use database xxx");
+            string js = con.receive();
+            JObject jr = JSON.fromJson(js);
+            string ok = jr["ok"].ToString();
+            string result = jr["result"].ToString();
+            if ("0".Equals(ok)) { MessageBox.Show(result); return; }
+            lblDatabaseName.Text = result; ;
+            this.refreshTree(null, null);//怎么传参数进去？
 			//TODO refresh UIs
 			//1.left top info 
 			//2.table tree
 			//  * use refreshTree(object sender, EventArgs e)
-			//
-
-
 		}
 
 		private void createTable(object sender, EventArgs e)
@@ -130,7 +135,10 @@ namespace aWorkbench
             string databaseName = "xx";
             TreeNode tn1 = treeTable.Nodes.Add(databaseName);
             //table_name&col_name
-			string jsonString = "{'ok':1,result:['table1','table2','table3']}";
+            string sql = "list tables in" + databaseName + ";";
+            con.send(sql);
+            string jsonString = con.receive();
+			//jsonString = "{'ok':1,result:['table1','table2','table3']}";
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
@@ -142,7 +150,10 @@ namespace aWorkbench
                 TreeNode tn2 = new TreeNode(jares[i].ToString());
                 tn1.Nodes.Add(tn2);
 
-                string colname = "{'ok':1,result:['col1','col2','col3']}";
+                string sql_col = "list columns from " + jares[i].ToString() + " in " + databaseName;
+                con.send(sql_col);
+                string colname = con.receive();
+                //colname = "{'ok':1,result:['col1','col2','col3']}";
                 JObject jrcol = JSON.fromJson(colname);
                 string result2 = jrcol["result"].ToString();
                 JArray jacol = (JArray)JsonConvert.DeserializeObject(result2);
