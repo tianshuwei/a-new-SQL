@@ -8,8 +8,8 @@ namespace aWorkbench
 	public static class cfg
 	{
 		public static int example { get; set; }
-        public static string ip = "49.52.46.11";
-        public static int port = 8080;
+        public static string ip = "120.24.174.100";
+        public static int port = 1234;
 		
 	}
 }

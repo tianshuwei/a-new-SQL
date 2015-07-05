@@ -24,6 +24,7 @@ namespace aWorkbench
 		private Queue<String> rcvDta;
 		private Thread recvDataThread;
 		private int sentRequest;
+		private static aSQLConnector instance=null;
 		private STATUS status;
 		internal STATUS Status
 		{
@@ -34,13 +35,21 @@ namespace aWorkbench
 
 		}
 
-		public aSQLConnector(string ipString, int port)  {
+		private aSQLConnector(string ipString, int port)  {
 			this.ip = IPAddress.Parse(ipString);
 			this.port = port;
 			this.sentRequest = 0;
 			status = STATUS.CLOSE;
+			openConnection();
+			rcvDta = new Queue<String>();
 			recvDataThread = new Thread(_receive);
+			recvDataThread.Start();
         }
+
+		public static aSQLConnector getInstance(string ipString, int port) {
+			if (instance == null) return new aSQLConnector(ipString, port);
+			else return instance;
+		}
 
 		private bool openConnection() {
 			switch (Status) {
@@ -67,12 +76,12 @@ namespace aWorkbench
 		}
 
 		public bool send(string txt,bool keepOpen=true) {
-			if (status != STATUS.OPEN)
-				if (!openConnection()) return false;
+			//if (status != STATUS.OPEN)
+				//if (!openConnection()) return false;
+			txt = string.Format("\x1B^\x1B,{0}\x1B,\x1B$", txt);
 			NetworkStream stream = client.GetStream();
 			byte[] sd = Encoding.Default.GetBytes(txt);
 			stream.Write(sd, 0, sd.Length);
-			stream.Close();
 			sentRequest++;
 			if (!keepOpen) client.Close();
 			return true;
@@ -85,7 +94,9 @@ namespace aWorkbench
 			{
 				if (status != STATUS.OPEN) continue;
 				l = client.Client.Receive(rcvBuf);
-				rcvDta.Enqueue(Encoding.UTF8.GetString(rcvBuf, 0, l));
+				String xx = Encoding.UTF8.GetString(rcvBuf, 0, l);
+				if ("".Equals(xx)) continue;
+                rcvDta.Enqueue(Encoding.UTF8.GetString(rcvBuf, 0, l));
 			}
 		}
 

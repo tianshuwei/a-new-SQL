@@ -50,7 +50,7 @@ namespace aWorkbench
 			{
 				if (((Elem)obj).type != this.type) return false;
 				return ((Elem)obj).value == this.value;
-			}
+            }
 			catch { }
 			return base.Equals(obj);
 		}
