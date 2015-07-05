@@ -5,8 +5,14 @@ import os,sys
 i_def=struct.calcsize("20si")
 i_col=struct.calcsize("20s8si???")
 
+
 def create_table(tablespec, dbname):
 	try:
+		tables=list_tables(dbname)
+		if tables["ok"]==1:
+			for a_table in tables["result"][1:]:
+				if tablespec.tname==a_table[0]:
+					return {"ok":0,"result":["The table already exists!",]}
 		bwfile=open('%s.dbf'%dbname,'ab')
 		content1 = struct.pack("20si",tablespec.tname,len(tablespec.columns))
 		bwfile.write(content1)
@@ -23,6 +29,7 @@ def create_table(tablespec, dbname):
 			bwfile.write(content2)
 		bwfile.flush()
 		bwfile.close()
+		return {"ok":1,"result":[["success in creating table!",],]}
 	except Exception,e:
 		print traceback.print_exc()
 
@@ -88,6 +95,25 @@ def list_tables(dbname):
 	except Exception,e:
 		print traceback.print_exc()
 
+def creat_dir(file_name):
+	try:
+		os.mkdir(file_name)
+	except OSError:
+		pass
+	except Exception,e:
+		print traceback.print_exc()
+
+def format_string(arrs):
+	s=''
+	# for arr in arrs:
+	# 	s=s+'?'
+	for arr in arrs:
+		if arr[1]=='int':
+			s=s+'i'
+		else:
+			s=s+str(arr[2])+'s'
+	return s
+
 def endWith(s,*endstring):
 		array = map(s.endswith,endstring)
 		if True in array:
@@ -118,13 +144,48 @@ def drop_table(tname, dbname):
 	pass
 
 def insert(tname, values, dbname):
+	try:
+		creat_dir(dbname)
+		cols = list_columns(tname,dbname)
+		if cols["ok"]==0 : return cols
+		format_str=format_string(cols["result"][1:])
+		bwfile=open('%s.dat'%os.path.join(dbname,tname),'ab')
+		for line in values:
+			li=list(line)
+			null_list=[]
+			format_null=''
+			i=0
+			for e in li:
+				if e == None:
+					null_list.append(True)
+					if cols["result"][i+1][1]=="int": 
+						li[i]=0
+					else:
+						li[i]='None'
+				else:
+					null_list.append(False)
+				i=i+1
+				format_null=format_null+'?'
+			print null_list
+			print li
+			content2 = struct.pack('?'+format_null,True,*null_list)
+			bwfile.write(content2)
+			content2 = struct.pack(format_str,*li)
+			bwfile.write(content2)
+		bwfile.flush()
+		bwfile.close()
+		return {"ok":1,"result":[["succeed in insert!",],]}
+	except Exception,e:
+		print traceback.print_exc()
 	"""values: e.g.((1, "jason", None),
 					(2, "bradley", None),
 					(3, "duffy", "warwick avenue")) """
 
+
 def delete(tname, where, dbname):
 	from parser import mk_test
 	test = mk_test(where)
+
 	"""test: e.g.
 	# for each record:
 		# you need some function equivalent to this:
@@ -139,6 +200,7 @@ def delete(tname, where, dbname):
 		if test(relation):
 			delete this record
 	"""
+
 
 def update(tname, assignments, where, dbname):
 	pass
@@ -155,7 +217,13 @@ def test():
 	columns=[c1,c2]
 	tablespec=collections.namedtuple('tablespec','tname columns')
 	t=tablespec(tname="tab1",columns=columns)
-	create_table(t,"test")
+	print create_table(t,"test1")
+
+def test2():
+	a=((1, "jason"),
+					(2, None),
+					(3, "warwick avenue"))
+	insert("tab1",a,"test1")
 
 if __name__ == '__main__':
-	print list_databases()
+	test2()
