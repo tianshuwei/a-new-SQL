@@ -9,6 +9,7 @@ sql_stmt = create_table_stmt
 	| insert_stmt
 	| update_stmt
 	| delete_stmt
+	| simple_select_stmt
 	| select_stmt
 	| list_stmt
 	| dummy_stmt
@@ -19,12 +20,24 @@ drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_dr
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ _const_tuples _ K_IN __ database_name mk_insert
 delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_delete
 update_stmt = K_UPDATE __ table_name __ K_SET __ _assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_update
-select_stmt = select_core __ K_IN __ database_name
+simple_select_stmt = K_SELECT __ (?:\*) __ K_FROM __ table_name __ K_IN __ database_name mk_simple_select
+select_stmt = select_core __ K_IN __ database_name mk_select
 list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
 	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
 	| K_LIST __ (?i)(?:databases) mk_list_databases
 dummy_stmt = _
-select_core = K_SELECT __ _columns __ K_FROM __ table_name __ K_WHERE __ _boolean_expr
+select_core = K_SELECT __ _columns __ K_FROM __ _join_expr __ K_WHERE __ _boolean_expr
+_join_expr = join_expr hug
+join_expr = table_name __join_expr
+__join_expr = COMMA join_expr
+	| _join_clause __join_expr
+	|
+_join_clause = join_clause mk_op_join
+join_clause = __ (?i)((?:inner\s+)?join) __join_clause
+	| __ (?i)(left\s+(?:outer\s+)?join) __join_clause
+	| __ (?i)(right\s+(?:outer\s+)?join) __join_clause
+	| __ (?i)(full\s+(?:outer\s+)?join) __join_clause
+__join_clause = __ table_name __ (?i)(?:on) __ dynamic EQU dynamic
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
@@ -32,8 +45,8 @@ _assignments = assignments hug
 assignments = assignment COMMA assignments
 	| assignment
 _columns = columns hug
-columns = column_name COMMA columns
-	| column_name
+columns = dynamic COMMA columns
+	| dynamic
 	| (\*)
 assignment = column_name EQU value_expr hug
 column_def = column_name __ type_name __ column_constraint __ valid_flag mk_columnIV
@@ -47,7 +60,7 @@ database_name = any_name
 column_name = any_name
 column_constraint = null_flag mk_constraintI
 	| key_flag __ null_flag hug
-key_flag = (?i)(?:primary) __ (?i)(key) mk_key
+key_flag = (?i)((?:primary\s+)?key) mk_key
 null_flag = K_NOT __ K_NULL mk_null
 valid_flag = (?i)(valid) mk_valid
 	| K_NOT __ (?i)(valid) mk_valid
@@ -83,7 +96,7 @@ propositional = value_expr __  K_NOT _ K_NULL mk_op_null
 	| K_NOT _ K_EXISTS _ \( _ select_stmt _ \)
 	| K_EXISTS _ \( _ select_stmt _ \)
 comparitive = _additive _ (\=\=|\=|\!\=|<>) _ _additive biop
-	| string __ (?i)(is[\x20]*not|is|like) __ string biop
+	| string __ (?i)(is\s*not|is|like) __ string biop
 	| _additive _ (<=|<|>=|>) _ _additive biop
 	| _additive __ K_BETWEEN __ _additive __ (?i)(?:and) __ _additive mk_op_between
 	| _additive __ K_NOT __ K_BETWEEN __ _additive __ (?i)(?:and) __ _additive mk_op_between
