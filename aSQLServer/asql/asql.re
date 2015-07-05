@@ -18,22 +18,24 @@ rename_table_stmt = K_RENAME __ K_TABLE __ table_name __ table_name __ K_IN __ d
 drop_table_stmt = K_DROP __ K_TABLE __ table_name __ K_IN __ database_name mk_drop_table
 insert_stmt = K_INSERT __ K_INTO __ table_name __ K_VALUES _ _const_tuples _ K_IN __ database_name mk_insert
 delete_stmt = K_DELETE __ K_FROM __ table_name __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_delete
-update_stmt = K_UPDATE __ table_name __ K_SET __ assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name
+update_stmt = K_UPDATE __ table_name __ K_SET __ _assignments __ K_WHERE __ _boolean_expr __ K_IN __ database_name mk_update
 select_stmt = select_core __ K_IN __ database_name
 list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ database_name mk_list_columns
 	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
 	| K_LIST __ (?i)(?:databases) mk_list_databases
 dummy_stmt = _
-select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ _boolean_expr
+select_core = K_SELECT __ _columns __ K_FROM __ table_name __ K_WHERE __ _boolean_expr
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
+_assignments = assignments hug
 assignments = assignment COMMA assignments
 	| assignment
+_columns = columns hug
 columns = column_name COMMA columns
 	| column_name
 	| (\*)
-assignment = column_name EQU value_expr
+assignment = column_name EQU value_expr hug
 column_def = column_name __ type_name __ column_constraint __ valid_flag mk_columnIV
 	| column_name __ type_name __ column_constraint mk_columnI
 	| column_name __ type_name __ valid_flag mk_columnII
@@ -59,10 +61,10 @@ const_tuples = const_tuple COMMA const_tuples
 const_tuple = \( _ consts _ \) hug
 consts = const_expr COMMA consts
 	| const_expr
-const_expr = string
-	| _additive calc
-value_expr = string
-	| _additive
+const_expr = _additive calc
+	| string
+value_expr = _additive
+	| string
 _boolean_expr = boolean_expr biops
 boolean_expr = _conjuctional __ K_OR __ boolean_expr
 	| _conjuctional
