@@ -9,3 +9,8 @@ update t4
 		address = "221B Baker Street"
 	where id = 1
 	in parser_test;
+
+update t8
+	set z = z + 1
+	where z > 20
+	in parser_test;

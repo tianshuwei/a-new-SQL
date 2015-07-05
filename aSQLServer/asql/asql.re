@@ -24,13 +24,14 @@ list_stmt = K_LIST __ (?i)(?:columns) __ K_FROM __ table_name __ K_IN __ databas
 	| K_LIST __ (?i)(?:tables) __ K_IN __ database_name mk_list_tables
 	| K_LIST __ (?i)(?:databases) mk_list_databases
 dummy_stmt = _
-select_core = K_SELECT __ columns __ K_FROM __ table_name __ K_WHERE __ _boolean_expr
+select_core = K_SELECT __ _columns __ K_FROM __ table_name __ K_WHERE __ _boolean_expr
 _column_defs = column_defs hug
 column_defs = column_def COMMA column_defs
 	| column_def
 _assignments = assignments hug
 assignments = assignment COMMA assignments
 	| assignment
+_columns = columns hug
 columns = column_name COMMA columns
 	| column_name
 	| (\*)
@@ -60,10 +61,10 @@ const_tuples = const_tuple COMMA const_tuples
 const_tuple = \( _ consts _ \) hug
 consts = const_expr COMMA consts
 	| const_expr
-const_expr = string
-	| _additive calc
-value_expr = string
-	| _additive
+const_expr = _additive calc
+	| string
+value_expr = _additive
+	| string
 _boolean_expr = boolean_expr biops
 boolean_expr = _conjuctional __ K_OR __ boolean_expr
 	| _conjuctional
