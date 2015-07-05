@@ -36,7 +36,7 @@ namespace aWorkbench
         private void button2_Click(object sender, EventArgs e)
         {
             //confirm_btn
-            con.send(textBox1.Text, true);
+            con.send(textBox1.Text);
         }
 	}
 }
