@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 namespace aWorkbench
 {
 	public partial class workbench : Form
@@ -17,11 +18,11 @@ namespace aWorkbench
 		public workbench()
 		{
 			InitializeComponent();
-			con = new aSQLConnector("127.0.0.1", 3306);
+			con = aSQLConnector.getInstance("127.0.0.1", 3306);
 			//dataGridResult.Columns.Add("col2", "col2");
             resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
 		}
-        public void listviewResult_load(resultSet rs)
+        private void getResult(resultSet rs)
         {
             listViewResult.GridLines = true;//表格是否显示网格线
             listViewResult.FullRowSelect = true;//是否选中整行
@@ -68,90 +69,96 @@ namespace aWorkbench
             if (e.Node == null) return;
 			if (e.Button == MouseButtons.Right)
 			{
-				switch (e.Node.Level) {
+                switch (e.Node.Level)
+                {
 					case 0://顶层 Tables
-                        int xx=e.Node.TreeView.SelectedNode.GetNodeCount(true);
-                        string[] tables=new string[20];
+                        int xx = e.Node.TreeView.SelectedNode.GetNodeCount(true);
+                        string[] tables = new string[20];
                         for (int i = 0; i < xx; i++)
                         {
                             tables[i] = "drop " + e.Node.TreeView.Nodes[i].Text;
-                            ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tables[i]);
-                            tsmi1.Click += new System.EventHandler(
+                            ToolStripMenuItem tsmi = new ToolStripMenuItem(tables[i]);
+                            tsmi.Click += new System.EventHandler(
                                 (object _sender, EventArgs _e) =>
                                 {
+                                    con.send(tables[i], true);
                                     //do something
                                 }
                                 );
                             menuStripEditTable.Items.RemoveAt(0);
-                            menuStripEditTable.Items.Insert(0, tsmi1);
+                            menuStripEditTable.Items.Insert(0, tsmi);
                             break;
                         }
 						break;
 					case 1:// TableA
                         string tableA = "drop " + e.Node.Text;
-                        ToolStripMenuItem tsmi2 = new ToolStripMenuItem(tableA);
-						tsmi2.Click += new System.EventHandler(
-							(object _sender, EventArgs _e) => {
-								//do something
+                        ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tableA);
+                        tsmi1.Click += new System.EventHandler(
+                            (object _sender, EventArgs _e) =>
+                            {
+                                con.send(tableA, true);
+
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
-						menuStripEditTable.Items.Insert(0, tsmi2);
+                        menuStripEditTable.Items.Insert(0, tsmi1);
 						break;
 					case 2://col1
-						ToolStripMenuItem tsmi = new ToolStripMenuItem("remove col " + e.Node.Text);
-						tsmi.Click += new System.EventHandler(
-							(object _sender, EventArgs _e) => {
+                        string rcol = "remove col " + e.Node.Text;
+                        ToolStripMenuItem tsmi2 = new ToolStripMenuItem(rcol);
+                        tsmi2.Click += new System.EventHandler(
+                            (object _sender, EventArgs _e) =>
+                            {
+                                string ipString = aWorkbench.cfg.ip;
+                                int port = aWorkbench.cfg.port;
+                                con.send(rcol, true);
 								//do something
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
-						menuStripEditTable.Items.Insert(0, tsmi);
+                        menuStripEditTable.Items.Insert(0, tsmi2);
 						break;
 				}
 			}
 
 		}
 
+
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
+            //database_name
+            string databaseName = "xx";
+            TreeNode tn1 = treeTable.Nodes.Add(databaseName);
+            //table_name&col_name
 			string jsonString = "{'ok':1,result:['table1','table2','table3']}";
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
 
 			if ("0".Equals(ok)) { MessageBox.Show(result); return; }
-            string[] tables = result.Split(new char[] { ',' });
-            foreach (string tablename in tables)
+            JArray jares = (JArray)JsonConvert.DeserializeObject(result);
+            for (int i = 0; i < jares.Count; i++)
             {
-                TreeNode nodeChild = new TreeNode();
-                nodeChild.Text = tablename;
-                treeTable.Nodes.Add(nodeChild);
+                TreeNode tn2 = new TreeNode(jares[i].ToString());
+                tn1.Nodes.Add(tn2);
 
-                string colname = "{'ok':1,result:['table1','table2','table3']}";
-                JObject cn = JSON.fromJson(colname);
-                string ok2 = jr["ok"].ToString();
-                string result2 = jr["result"].ToString();
-
-                if (ok2 == "0") { MessageBox.Show(result); return; }
-                string[] coltables = result2.Split(new char[] { ',' });
-                foreach (string name in coltables) { }
+                string colname = "{'ok':1,result:['col1','col2','col3']}";
+                JObject jrcol = JSON.fromJson(colname);
+                string result2 = jrcol["result"].ToString();
+                JArray jacol = (JArray)JsonConvert.DeserializeObject(result2);
+                for (int j = 0; j < jacol.Count; j++)
+                {
+                    TreeNode tn3 = new TreeNode(jacol[i].ToString());
+                    tn2.Nodes.Add(tn3);
+                }
             }
 		}
 
 		private void runCmds(object sender, EventArgs e)
 		{
             string cmds = txtScripts.Text;
-            //todo
-            string jsonString = "{'ok':1,result:['table1','table2','table3']}";//ok,result类型是string还是char？
-            JObject jr = JSON.fromJson(jsonString);
-            string ok = jr["ok"].ToString();
-            string result = jr["result"].ToString();
-            if ("0".Equals(ok)) {
-                MessageBox.Show(result); return;
-            }
-            string[] tables = result.Split(new char[] { ',' });
-            //aWorkbench.Elem resultSet = new aWorkbench.resultSet(jsonString,null);
+			//todo
+			con.send(cmds);
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
@@ -163,26 +170,24 @@ namespace aWorkbench
 		private void openScript(object sender, EventArgs e)
 		{
             OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "(*.*)|*.*"; //过滤文件类型
+            fd.Filter = "(*.sql)|*.sql"; //过滤文件类型  TODO 只允许打开.sql文件
             fd.InitialDirectory = Application.StartupPath + "\\Temp\\";//设定初始目录
             fd.ShowReadOnly = false; //设定文件是否只读
             DialogResult r = fd.ShowDialog();
             if (r == DialogResult.OK)
             {
+                txtScripts.Text = string.Empty;
+                StreamReader sr = new StreamReader(fd.FileName);
+                txtScripts.Text = sr.ReadToEnd();
+                sr.Close();
                 //进行后续处理
+				//DID  张徐前 把文件打开，然后把文件内容载入到输入框（txtScripts）
             }
 		}
-        private void txtScripts_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-        private void dataGridResult_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
+		private void setMsg(string type, string msg) { //TODO 把type，msg消息设置到消息框中
 
 		}
-        private void treeTable_AfterSelect(object sender, TreeViewEventArgs e)
-        {
 
-        }
 	}
 }
