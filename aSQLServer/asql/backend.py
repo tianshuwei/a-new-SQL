@@ -266,6 +266,12 @@ def delete(tname, where, dbname):
 def update(tname, assignments, where, dbname):
 	pass
 
+def select(projection, join_expr, where, dbname):
+	pass
+
+def simple_select(tname, dbname):
+	pass
+
 def test():
 	c1=("id","int",4,True,False,True)
 	c2=("name","string",20,False,True,True)

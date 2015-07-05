@@ -9,15 +9,15 @@ using System.Windows.Forms;
 
 namespace aWorkbench
 {
-    public partial class ComboBoxForm : Form
+    public partial class frmCreateTable : Form
     {
-        private aSQLConnector con;
-        public ComboBoxForm()
+       // private aSQLConnector con;
+        public frmCreateTable()
         {
             InitializeComponent();
-            con = aSQLConnector.getInstance("127.0.0.1", 3306);
+            //con = aSQLConnector.getInstance();
             //dataGridResult.Columns.Add("col2", "col2");
-            resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
+            //resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
         }
 
         ListViewItem TheListview;                     //选中项的集合对象
@@ -163,7 +163,7 @@ namespace aWorkbench
                 MessageBox.Show("Please set primary key");
                 return;
             }
-            con.send(add, true);
+			new frmConfirmScript(add).Show();
 
         }
 

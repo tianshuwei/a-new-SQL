@@ -14,8 +14,9 @@ namespace aWorkbench
 		private aSQLConnector con;
 		public frmConfirmScript(string script) {
             textBox1.Text = script;
+			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
 		}
-		public frmConfirmScript()
+		private frmConfirmScript()
 		{
 			InitializeComponent();
 			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
@@ -35,7 +36,7 @@ namespace aWorkbench
         private void button2_Click(object sender, EventArgs e)
         {
             //confirm_btn
-            con.send(textBox1.Text, true);
+            con.send(textBox1.Text);
         }
 	}
 }
