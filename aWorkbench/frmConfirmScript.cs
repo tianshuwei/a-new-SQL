@@ -14,8 +14,9 @@ namespace aWorkbench
 		private aSQLConnector con;
 		public frmConfirmScript(string script) {
             textBox1.Text = script;
+			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
 		}
-		public frmConfirmScript()
+		private frmConfirmScript()
 		{
 			InitializeComponent();
 			con = aSQLConnector.getInstance(cfg.ip, cfg.port);

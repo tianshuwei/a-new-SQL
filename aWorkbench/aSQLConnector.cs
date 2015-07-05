@@ -51,6 +51,11 @@ namespace aWorkbench
 			else return instance;
 		}
 
+		public static aSQLConnector getInstance()
+		{
+			return instance;
+		}
+
 		private bool openConnection() {
 			switch (Status) {
 				case STATUS.OPEN:
@@ -94,9 +99,9 @@ namespace aWorkbench
 			{
 				if (status != STATUS.OPEN) continue;
 				l = client.Client.Receive(rcvBuf);
+				if (l==0) continue;
 				String xx = Encoding.UTF8.GetString(rcvBuf, 0, l);
-				if ("".Equals(xx)) continue;
-                rcvDta.Enqueue(Encoding.UTF8.GetString(rcvBuf, 0, l));
+				rcvDta.Enqueue(Encoding.UTF8.GetString(rcvBuf, 0, l));
 			}
 		}
 
@@ -105,6 +110,7 @@ namespace aWorkbench
 			if (sentRequest > 0)
 			{
 				while (rcvDta.Count != sentRequest) ;
+				sentRequest--;
 				return rcvDta.Dequeue();
 			}
 			else return null;

@@ -61,7 +61,7 @@ namespace aWorkbench
 
 		private void createTable(object sender, EventArgs e)
 		{
-
+			new frmCreateTable().Show();
 		}
 
 		private void nodeClick(object sender, TreeNodeMouseClickEventArgs e)
