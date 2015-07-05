@@ -42,13 +42,14 @@ namespace aWorkbench
 			status = STATUS.CLOSE;
 			openConnection();
 			rcvDta = new Queue<String>();
-			recvDataThread = new Thread(_receive);
-			recvDataThread.Start();
-        }
+			//recvDataThread = new Thread(_receive);
+			instance = this;
+			//recvDataThread.Start();
+		}
 
 		public static aSQLConnector getInstance(string ipString, int port) {
-			if (instance == null) return new aSQLConnector(ipString, port);
-			else return instance;
+			if (instance == null) instance = new aSQLConnector(ipString, port);
+			return instance;
 		}
 
 		public static aSQLConnector getInstance()
@@ -59,7 +60,7 @@ namespace aWorkbench
 		private bool openConnection() {
 			switch (Status) {
 				case STATUS.OPEN:
-					return false;
+					return true;
 				case STATUS.SUSPEND:
 					return false;
 				case STATUS.CLOSE:
@@ -80,25 +81,39 @@ namespace aWorkbench
 			return false;//should never run to here!
 		}
 
-		public bool send(string txt,bool keepOpen=true) {
-			//if (status != STATUS.OPEN)
-				//if (!openConnection()) return false;
+		public bool send(string txt) {
+			if (status != STATUS.OPEN) openConnection();
 			txt = string.Format("\x1B^\x1B,{0}\x1B,\x1B$", txt);
 			NetworkStream stream = client.GetStream();
 			byte[] sd = Encoding.Default.GetBytes(txt);
 			stream.Write(sd, 0, sd.Length);
 			sentRequest++;
-			if (!keepOpen) client.Close();
+			byte[] rcvBuf = new byte[1024];
+			int l = 0;
+			while (l == 0)
+				l = client.Client.Receive(rcvBuf);
+			String xx = Encoding.UTF8.GetString(rcvBuf, 0, l);
+			rcvDta.Enqueue(Encoding.UTF8.GetString(rcvBuf, 0, l));
+			client.Close();
+			status = STATUS.CLOSE;
 			return true;
 		}
 
 		private void _receive() {
 			byte[] rcvBuf = new byte[1024];
-			int l;
+			int l = 0;
             while (true)
 			{
 				if (status != STATUS.OPEN) continue;
-				l = client.Client.Receive(rcvBuf);
+				try
+				{
+					l = client.Client.Receive(rcvBuf);
+				}
+				catch (SocketException e) {
+					status = STATUS.CLOSE;
+					openConnection();
+
+				}
 				if (l==0) continue;
 				String xx = Encoding.UTF8.GetString(rcvBuf, 0, l);
 				rcvDta.Enqueue(Encoding.UTF8.GetString(rcvBuf, 0, l));

@@ -20,7 +20,7 @@ namespace aWorkbench
 			InitializeComponent();
 			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
 			//dataGridResult.Columns.Add("col2", "col2");
-            resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
+            //resultSet xx = new resultSet("{ok:1,result:[[],[],[]]}", "xx");
 		}
         private void getResult(resultSet rs)
         {
@@ -50,14 +50,10 @@ namespace aWorkbench
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-            con = aSQLConnector.getInstance(cfg.ip, cfg.port);
-            con.send("use database xxx");
-            string js = con.receive();
-            JObject jr = JSON.fromJson(js);
-            string ok = jr["ok"].ToString();
-            string result = jr["result"].ToString();
-            if ("0".Equals(ok)) { MessageBox.Show(result); return; }
-            lblDatabaseName.Text = result; ;
+            con.send("list databases;");
+			String js = con.receive();
+			// cfg.databaseName 在返回的列表中，设置，否则报错
+			lblDatabaseName.Text = cfg.databaseName ;
             this.refreshTree(null, null);//怎么传参数进去？
 			//TODO refresh UIs
 			//1.left top info 
@@ -87,7 +83,7 @@ namespace aWorkbench
                             tsmi.Click += new System.EventHandler(
                                 (object _sender, EventArgs _e) =>
                                 {
-                                    con.send(tables[i], true);
+                                    con.send(tables[i]);
                                     //do something
                                 }
                                 );
@@ -102,7 +98,7 @@ namespace aWorkbench
                         tsmi1.Click += new System.EventHandler(
                             (object _sender, EventArgs _e) =>
                             {
-                                con.send(tableA, true);
+                                con.send(tableA);
 
 							}
 							);
@@ -117,7 +113,7 @@ namespace aWorkbench
                             {
                                 string ipString = aWorkbench.cfg.ip;
                                 int port = aWorkbench.cfg.port;
-                                con.send(rcol, true);
+                                con.send(rcol);
 								//do something
 							}
 							);
@@ -133,11 +129,11 @@ namespace aWorkbench
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
             //database_name
-            string databaseName = "xx";
-            TreeNode tn1 = treeTable.Nodes.Add(databaseName);
+			con.send(String.Format("list tables in {0};", cfg.databaseName));
+			TreeNode tn1 = treeTable.Nodes.Add(cfg.databaseName);
             //table_name&col_name
-            string sql = "list tables in" + databaseName + ";";
-            con.send(sql);
+            //string sql = "list tables in" + cfg.databaseName + ";";
+            //con.send(sql);
             string jsonString = con.receive();
 			//jsonString = "{'ok':1,result:['table1','table2','table3']}";
             JObject jr = JSON.fromJson(jsonString);
@@ -151,7 +147,7 @@ namespace aWorkbench
                 TreeNode tn2 = new TreeNode(jares[i].ToString());
                 tn1.Nodes.Add(tn2);
 
-                string sql_col = "list columns from " + jares[i].ToString() + " in " + databaseName;
+                string sql_col = "list columns from " + jares[i].ToString() + " in " + cfg.databaseName;
                 con.send(sql_col);
                 string colname = con.receive();
                 //colname = "{'ok':1,result:['col1','col2','col3']}";
