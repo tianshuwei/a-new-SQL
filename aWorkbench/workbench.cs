@@ -122,20 +122,19 @@ namespace aWorkbench
                         menuStripEditTable.Items.Insert(0, tsmi1);
 						break;
 					case 2://col1
-                        menuStripEditTable.Items.RemoveAt(0);
-                        string rcol = "remove col " + e.Node.Text;
+                        string rcol = "show details ";
                         ToolStripMenuItem tsmi2 = new ToolStripMenuItem(rcol);
-                    //    tsmi2.Click += new System.EventHandler(
-                    //        (object _sender, EventArgs _e) =>
-                    //        {
-                    //            new frmConfirmScript(rcol).Show();
-                    //            //do something
-                    //        }
-                    //        );
-                    //    menuStripEditTable.Items.RemoveAt(0);
+                        tsmi2.Click += new System.EventHandler(
+                            (object _sender, EventArgs _e) =>
+                            {
+                                rcol = "select * from " + e.Node.Parent.Text+ " in "+cfg.databaseName+";";
+                                txtScripts.Text=rcol;
+                                this.runCmds(null,null);
+                                //do something
+                            }
+                            );
+                        menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi2);
-                        menuStripEditTable.Items[0].Enabled = false;
-
 						break;
 				}
 			}
