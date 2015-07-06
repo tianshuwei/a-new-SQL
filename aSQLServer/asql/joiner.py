@@ -107,6 +107,8 @@ def fulljoin(ia, ib, na, nb):
 				yield vec(None)*na, bi
 	return _join
 
+jbiops=lambda o, x: jbiops(o[1:], [Joiner(o[0], x[0], x[1])] + x[2:]) if o else x[0]
+
 if __name__ == '__main__':
 	print "product"
 	for i in Joiner(product, Joiner(product, t1, t2), t3):
@@ -135,4 +137,9 @@ if __name__ == '__main__':
 	print
 	print "some complicated joins"
 	for i in Joiner(innerjoin(3, 1), Joiner(leftjoin(0, 0, 2), t1, t2), t3):
+		print i
+
+	print
+	print "using jbiops"
+	for i in jbiops([leftjoin(0, 0, 2), innerjoin(3, 1)], [t1, t2, t3]):
 		print i
