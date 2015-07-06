@@ -392,7 +392,6 @@
             this.lstConsoleMsg.TabIndex = 0;
             this.lstConsoleMsg.UseCompatibleStateImageBehavior = false;
             this.lstConsoleMsg.View = System.Windows.Forms.View.Details;
-            this.lstConsoleMsg.SelectedIndexChanged += new System.EventHandler(this.lstConsoleMsg_SelectedIndexChanged);
             // 
             // colType
             // 
