@@ -29,7 +29,7 @@ namespace aWorkbench
             listViewResult.View = View.Details;//设置显示方式
             listViewResult.Scrollable = true;//是否自动显示滚动条
             listViewResult.MultiSelect = false;//是否可以选择多行
-
+            listViewResult.Clear();
             //添加表头
             foreach (string str in rs.keys)
             {
