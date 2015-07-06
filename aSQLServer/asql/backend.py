@@ -247,7 +247,7 @@ def insert(tname, values, dbname):
 def delete(tname, where, dbname):
 	from parser1 import mk_test
 	test = mk_test(where)
-	all_ele = simple_select(tname,dbname)
+	all_ele = simple_select_t(tname,dbname)
 	if all_ele["ok"] == 0:
 		return all_ele
 	ii=0
@@ -256,13 +256,15 @@ def delete(tname, where, dbname):
 	format_str=format_string(cols["result"][1:])
 	brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
 	#rt0=[]
+	to_dele=[]
 	fo_st='?'
 	for col in cols["result"][1:]:
 		#rt0.append(col[0])
 		#count=count+1
 		fo_st=fo_st+'?'
-	length = struct.calcsize(fo_st+format_str)
-	print fo_st+format_str
+	length = struct.calcsize(fo_st)
+	length = length+struct.calcsize(format_str)
+	#print fo_st+format_str
 	for ele in all_ele["result"][1:]:
 		def relation(field_name):
 			#ii=0
@@ -271,11 +273,19 @@ def delete(tname, where, dbname):
 				for col in all_ele["result"][0] for ii in xrange(len(ele))
 			}
 			return mapping[field_name]
-		ii+=1
 		if test(relation):
-			print "dele:"+str(ii)
-			#brwfile=open('%s.dat'%os.path.join(dbname,tname),'rb+')
-			#
+			to_dele.append(ii)
+		ii+=1
+
+	for ele_dele in to_dele:
+		bwfile=open('%s.dat'%os.path.join(dbname,tname),'rb+')
+		print "dele:"+str(ele_dele*length)
+		bwfile.seek(ele_dele*length)
+		bwfile.write(struct.pack('?',False))
+		bwfile.flush()
+		bwfile.close()
+	return {"ok":1,"result":[["succeed in deletion!",],]}
+
 	"""test: e.g.
 	# for each record:
 		# you need some function equivalent to this:
@@ -315,7 +325,49 @@ def simple_select(tname, dbname):
 		rt_lists.append(rt0)
 		c1 = brfile.read(struct.calcsize('?'))
 		while c1 !='':
-			if struct.unpack("?",c1):
+			rt_list=[]
+			ii=0
+			content1=brfile.read(struct.calcsize('?')*count)
+			un_co1=struct.unpack(fo_st,content1)
+			content2=brfile.read(struct.calcsize(format_str))
+			if struct.unpack("?",c1)[0]:
+				print struct.unpack("?",c1)[0]
+				un_co2=struct.unpack(format_str,content2)
+				for f in un_co1:
+					if f:
+						rt_list.append(None)
+					else:
+						if cols["result"][ii+1][1]=='string':
+							rt_list.append(un_co2[ii].strip('\0'))
+						else:
+							rt_list.append(un_co2[ii])
+					ii=ii+1
+				rt_lists.append(rt_list)
+			c1 = brfile.read(struct.calcsize('?'))
+		return {"ok":1,"result":rt_lists}
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
+	except Exception,e:
+		print traceback.print_exc()
+
+def simple_select_t(tname, dbname):
+	try:
+		cols = list_columns(tname,dbname)
+		if cols["ok"]==0 : return cols
+		format_str=format_string(cols["result"][1:])
+		brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
+		rt0=[]
+		rt_lists=[]
+		fo_st=''
+		count=0
+		for col in cols["result"][1:]:
+			rt0.append(col[0])
+			count=count+1
+			fo_st=fo_st+'?'
+		rt_lists.append(rt0)
+		c1 = brfile.read(struct.calcsize('?'))
+		while c1 !='':
+			if True:
 				rt_list=[]
 				ii=0
 				content1=brfile.read(struct.calcsize('?')*count)
@@ -352,8 +404,11 @@ def test2():
 	a=((1, "jason"),
 					(2, None),
 					(3, "warwick avenue"))
-	insert("tab11",a,"test1")
+	print insert("tab111",a,"test1")
 
 if __name__ == '__main__':
-	from parser_helper import Vector as V
-	print delete("tab1",V('=',1,1),"test1")
+	#test()
+	#test2()
+	print simple_select("tab111","test1")
+	#from parser_helper import Vector as V
+	#print delete("tab111",V('=',1,1),"test1")
