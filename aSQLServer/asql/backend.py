@@ -407,39 +407,73 @@ def select(projection, join_expr, where, dbname):
 	from joiner import product,innerjoin,leftjoin,rightjoin,fulljoin,jbiops
 	try:
 		tables=[]
-		for tab in join_expr:
+		for tab in ((_t_na if isinstance(_t_na,str) else _t_na[3]) for _t_na in join_expr):
 			t=simple_select(tab,dbname)
 			if t["ok"]==0 : return t
 			def _table():
 				for ele in t["result"][1:]:
 					yield Vector(*ele)
 			tables.append(_table())
-		ops = [product]*(len(join_expr)-1)
-		mul_cols = []
-		index = []
-		for tab in join_expr:
-			mul_cols.append(list_columns(tab,dbname)["result"][1:])
-		for col_na in projection:
-			i=0
-			j=0
-			f=False
-			for t_na in join_expr:
-				#print "t_na:  "+t_na
-				if t_na==col_na.tname:
-					for c_na in mul_cols[i]:
-						#print "c_na:  ",c_na
-						if c_na[0] == col_na.cname: 
-							index.append(j)
-							f=True
-							if f : break
-						j+=1
+		if join_expr[1][0]=='leftjoin':
+			print join_expr[1][1].tname
+			cols1 = list_columns(join_expr[1][1].tname,dbname)
+			i = 0
+			for col1 in cols1["result"][1:]:
+				if col1[0]==join_expr[1][1].cname:
+					break
 				i+=1
-				if f: break
-		rt_list=[]
-		rt_list.append([c.cname for c in projection])
-		for piece in jbiops(ops,tables):
-			# print [piece[i] for i in index]
-			rt_list.append([piece[i] for i in index])
+			cols2 = list_columns(join_expr[1][2].tname,dbname)
+			j = 0
+			print join_expr[1][2].tname
+			for col2 in cols2["result"][1:]:
+				if col2[0]==join_expr[1][2].cname:
+					break
+				j+=1
+			len_j=len(cols2)
+			ops = [leftjoin(i,j,len_j)]
+			mul_cols = [cols1['result'][1:],cols2['result'][1:]]
+			#print mul_cols
+			index = []
+		else:
+			mul_cols = []
+			index = []
+			for tab in join_expr:
+				mul_cols.append(list_columns(tab,dbname)["result"][1:])
+			ops = [product]*(len(join_expr)-1)
+		if projection != '*':
+			for col_na in projection:
+				i=0
+				j=0
+				f=False
+				for t_na in ((_t_na if isinstance(_t_na,str) else _t_na[3]) for _t_na in join_expr):
+					#print "t_na:  "+t_na
+					if t_na==col_na.tname:
+						for c_na in mul_cols[i]:
+							print "c_na:  ",c_na
+							print col_na.cname == c_na
+							if c_na[0] == col_na.cname: 
+								index.append(j)
+								print "j: "+str(j)
+								f=True
+								if f : break
+							j+=1
+					i+=1
+					if f: break
+			#print index
+			rt_list=[]
+			rt_list.append([c.cname for c in projection])
+			for piece in jbiops(ops,tables):
+				# print [piece[i] for i in index]
+				rt_list.append([piece[i] for i in index])
+		else:
+			rt_list=[]
+			rt_def=[]
+			for t_na in ((_t_na if isinstance(_t_na,str) else _t_na[3]) for _t_na in join_expr):
+				rt_def+=([aa[0] for aa in list_columns(t_na,dbname)["result"][1:]])
+			rt_list.append(rt_def)
+			for piece in jbiops(ops,tables):
+				# print [piece[i] for i in index]
+				rt_list.append(piece)
 		return {"ok":1,"result":rt_list}
 
 	except Exception:
@@ -535,24 +569,25 @@ def test():
 	c2=("name","string",20,False,True,True)
 	columns=[c1,c2]
 	tablespec=collections.namedtuple('tablespec','tname columns')
-	t=tablespec(tname="tab1",columns=columns)
+	t=tablespec(tname="tab11",columns=columns)
 	print create_table(t,"test1")
 
 def test2():
 	a=((1, "jason"),
 					(2, None),
-					(3, "warwick avenue"))
-	print insert("tab111",a,"test1")
+					(3, "aaa"))
+	print insert("tab11",a,"test1")
 
 if __name__ == '__main__':
 	from parser1 import CellRef
 	#pass
 	#test()
-	#test2()
+	test2()
 	#from parser_helper import Vector as V
 	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
 	#print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
 	#print list_columns("tab111","test1")
 	#print simple_select("tab1","test1")
 	#print list_databases()
-	print select([CellRef("tab111.name")],['tab111',"tab111"],Vector('=',1,1),"test1")
+	#print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
+	print select('*',['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
