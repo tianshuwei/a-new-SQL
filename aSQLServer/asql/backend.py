@@ -41,7 +41,9 @@ def list_columns(tname, dbname):
 		while True:
 			content1=brfile.read(i_def)
 			#print "hh:"+content1
-			if content1=='\n'or content1=='': return {"ok":0,"result":["There is no such table!\n",]}
+			if content1=='\n'or content1=='': 
+				brfile.close()
+				return {"ok":0,"result":["There is no such table!\n",]}
 			c1=struct.unpack("20si",content1)
 			#print c1
 			flag = tname==(c1[0].strip('\0'))
@@ -67,6 +69,7 @@ def list_columns(tname, dbname):
 		brfile.close()
 		return {"ok":1,"result":ret_list}
 	except EOFError:
+		brfile.close()
 		return {"ok":0,"result":["There is no such table!",]}
 	except IOError:
 		return {"ok":0,"result":["There is no such database!",]}
@@ -81,15 +84,16 @@ def list_tables(dbname):
 		#if content1=='' : return {"ok":0,"result":["There is no table in this database!",]}
 		while content1 != '':
 			c1=struct.unpack("20si",content1)
-			tname=c1[0]
-			ret_list.append([tname.strip('\0'),])
+			tname=c1[0].strip('\0')
+			if tname != "~~~DeletedTable~~~":
+				ret_list.append([tname,])
 			for i in range(1,c1[1]+1):
 				content2=brfile.read(i_col)
 			content1=brfile.read(i_def)
 		brfile.close()
 		return {"ok":1,"result":ret_list}
 	except EOFError:
-		pass
+		brfile.close()
 	except IOError:
 		return {"ok":0,"result":["There is no such database!",]}
 	except Exception,e:
@@ -134,14 +138,69 @@ def list_databases():
 	except Exception,e:
 		print traceback.print_exc()
 
+
+def table_exist(tname,dbname):
+	tables=list_tables(dbname)
+	if tables["ok"]==1:
+		for a_table in tables["result"][1:]:
+			if tname==a_table[0]:
+				return True
+	return False
+
+
 def rename_table(tname, tname_new, dbname):
-	pass
+	try:
+		brwfile=open('%s.dbf'%dbname,'rb+')
+		if tname_new != "~~~DeletedTable~~~":
+			if table_exist(tname_new,dbname):
+				brwfile.close()
+				return {"ok":0,"result":["The new name already exists!",]}
+			# if table_exist(tname,dbname)==False:
+			# 	brwfile.close()
+			# 	return {"ok":0,"result":["The table does not exist!",]}
+		count1 = 0
+		count2 = 0
+		while True:
+			content1=brwfile.read(i_def)
+			#print "hh:"+content1
+			if content1=='\n'or content1=='': 
+				brfile.close()
+				return {"ok":0,"result":["There is no such table!\n",]}
+			c1=struct.unpack("20si",content1)
+			if c1[0].strip('\0')==tname:
+				brwfile.seek(count1*i_def+count2*i_col)
+				content2=struct.pack("20s",tname_new)
+				brwfile.write(content2)
+				brwfile.flush()
+				brwfile.close()
+				if tname_new == "~~~DeletedTable~~~":
+					os.remove("%s.dat"%os.path.join(dbname,tname))
+				else:
+					os.rename("%s.dat"%os.path.join(dbname,tname),"%s.dat"%os.path.join(dbname,tname_new))
+				return {"ok":1,"result":[["success in renaming!",],]}
+			count1=count1+1
+			count2=count2+c1[1]
+			for col in range(1,c1[1]+1):
+				brwfile.read(i_col)
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
+	except OSError:
+		return {"ok":1,"result":[["success in renaming!",],]}
+	except Exception,e:
+		print traceback.print_exc()
 
 def edit_table(tname, cname, columnspec, dbname):
 	pass
 
 def drop_table(tname, dbname):
-	pass
+	rt = rename_table(tname,"~~~DeletedTable~~~",dbname)
+	# print "return:"
+	# print rt
+	if rt["ok"]==1:
+		return {"ok":1,"result":[["success in droping table!",],]}
+	else:
+		return rt
+
 
 def insert(tname, values, dbname):
 	try:
@@ -166,8 +225,8 @@ def insert(tname, values, dbname):
 					null_list.append(False)
 				i=i+1
 				format_null=format_null+'?'
-			print null_list
-			print li
+			#print null_list
+			#print li
 			content2 = struct.pack('?'+format_null,True,*null_list)
 			bwfile.write(content2)
 			content2 = struct.pack(format_str,*li)
@@ -175,6 +234,8 @@ def insert(tname, values, dbname):
 		bwfile.flush()
 		bwfile.close()
 		return {"ok":1,"result":[["succeed in insert!",],]}
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
 	except Exception,e:
 		print traceback.print_exc()
 	"""values: e.g.((1, "jason", None),
@@ -205,19 +266,87 @@ def delete(tname, where, dbname):
 def update(tname, assignments, where, dbname):
 	pass
 
+def select(projection, join_expr, where, dbname):
+	pass
+
+def simple_select(tname, dbname):
+	try:
+		cols = list_columns(tname,dbname)
+		if cols["ok"]==0 : return cols
+		format_str=format_string(cols["result"][1:])
+		brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
+		rt0=[]
+		rt_lists=[]
+		fo_st=''
+		count=0
+		for col in cols["result"][1:]:
+			rt0.append(col[0])
+			count=count+1
+			fo_st=fo_st+'?'
+		rt_lists.append(rt0)
+		c1 = brfile.read(struct.calcsize('?'))
+		while c1 !='':
+			if struct.unpack("?",c1):
+				rt_list=[]
+				ii=0
+				content1=brfile.read(struct.calcsize('?')*count)
+				un_co1=struct.unpack(fo_st,content1)
+				content2=brfile.read(struct.calcsize(format_str))
+				print format_str
+				un_co2=struct.unpack(format_str,content2)
+				for f in un_co1:
+					if f:
+						rt_list.append(None)
+					else:
+						if cols["result"][ii+1][1]=='string':
+							rt_list.append(un_co2[ii].strip('\0'))
+						else:
+							rt_list.append(un_co2[ii])
+					ii=ii+1
+				rt_lists.append(rt_list)
+			c1 = brfile.read(struct.calcsize('?'))
+		return {"ok":1,"result":rt_lists}
+		# for line in values:
+		# 	li=list(line)
+		# 	null_list=[]
+		# 	format_null=''
+		# 	i=0
+		# 	for e in li:
+		# 		if e == None:
+		# 			null_list.append(True)
+		# 			if cols["result"][i+1][1]=="int": 
+		# 				li[i]=0
+		# 			else:
+		# 				li[i]='None'
+		# 		else:
+		# 			null_list.append(False)
+		# 		i=i+1
+		# 		format_null=format_null+'?'
+		# 	content2 = struct.pack('?'+format_null,True,*null_list)
+		# 	bwfile.write(content2)
+		# 	content2 = struct.pack(format_str,*li)
+		# 	bwfile.write(content2)
+		# bwfile.flush()
+		# bwfile.close()
+		return {"ok":1,"result":[["succeed in insert!",],]}
+	except IOError:
+		return {"ok":0,"result":["There is no such database!",]}
+	except Exception,e:
+		print traceback.print_exc()
+
 def test():
 	c1=("id","int",4,True,False,True)
 	c2=("name","string",20,False,True,True)
 	columns=[c1,c2]
 	tablespec=collections.namedtuple('tablespec','tname columns')
-	t=tablespec(tname="tab1",columns=columns)
+	t=tablespec(tname="tab111",columns=columns)
 	print create_table(t,"test1")
 
 def test2():
 	a=((1, "jason"),
 					(2, None),
 					(3, "warwick avenue"))
-	insert("tab1",a,"test1")
+	insert("tab11",a,"test1")
 
 if __name__ == '__main__':
-	test2()
+	print simple_select("tab1","test1")

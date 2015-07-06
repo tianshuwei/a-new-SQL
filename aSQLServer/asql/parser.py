@@ -1,6 +1,7 @@
 # Copyright 2015 Alex Yang <aleozlx@126.com>
 import peglet, os, collections, re
-from parser_helper import Vector as V, G, more_lambdas, sbind
+import parser_helper
+from parser_helper import Vector as V, G, sbind
 from backend import *
 sizeof={ 'int': 4 }
 tablespec=collections.namedtuple('tablespec','tname columns')
@@ -114,19 +115,24 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_op_in=lambda *ts: V('!in', ts[0], ts[2]) if isinstance(ts[1],str) and ts[1].upper()=="NOT" else V('in', ts[0], ts[1]),
 	mk_typecast=lambda *ts: TypeCast(ts),
 	mk_delete=sbind(delete), mk_update=sbind(update),
-	**more_lambdas)
+	mk_op_join=lambda *ts: V(parser_helper.operator(ts[0]), (ts[2], ts[3]), ts[1]),
+	mk_select=sbind(select), mk_simple_select=sbind(simple_select),
+	**parser_helper.more_lambdas)
 
 def execute(sql):
 	from server import error
 	ret=None
-	for r in parse(sql):
-		if len(r)==2: ret=r[0](*r[1])
+	try:
+		for r in parse(sql):
+			if len(r)==2: ret=r[0](*r[1])
+			else:
+				print r
+				return error("parser error") 
 		else:
-			print r
-			return error("parser error") 
-	else:
-		if ret: return ret
-		else: return error("backend error")
+			if ret: return ret
+			else: return error("backend error")
+	except peglet.Unparsable:
+		return error("syntax error")
 
 if __name__ == '__main__':
 	import sys
