@@ -36,15 +36,23 @@ namespace aWorkbench
                 listViewResult.Columns.Add(str);
             }
             //添加表格内容
+            int i = 0;
             foreach(List<Elem> xx in rs.values)
             {
                 ListViewItem item = new ListViewItem();
-                item.SubItems.Clear();
+                item.ImageIndex = i;
+                //item.SubItems.Clear();
+                int j = 0;
                 foreach (Elem xxx in xx)
                 {
-                    item.SubItems.Add(xxx.ToString());
+                    if (j == 0)
+                        item.Text = xxx.ToString();
+                    else
+                        item.SubItems.Add(xxx.ToString());
+                    j++;
                 }
-                listViewResult.Items.Add(item);
+                this.listViewResult.Items.Add(item);
+                i++;
             }
         }
 
@@ -173,8 +181,12 @@ namespace aWorkbench
 		{
             string cmds = txtScripts.Text;
 			//todo
-            new frmConfirmScript(cmds).Show();
-            setMsg("success", "cmds");
+            //new frmConfirmScript(cmds).Show();
+            con.send(cmds);
+            string jasonstring = con.receive();
+            aWorkbench.resultSet res = new aWorkbench.resultSet(jasonstring, "tablename");
+            this.getResult(res);
+            setMsg("success", cmds);
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
@@ -207,6 +219,11 @@ namespace aWorkbench
             this.lstConsoleMsg.Items.Add(lvi);
             lvi.SubItems.AddRange(new string[] { msg});
 		}
+
+        private void listViewResult_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
 
 	}
 }
