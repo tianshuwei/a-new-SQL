@@ -52,9 +52,29 @@ namespace aWorkbench
 		{
             con.send("list databases;");
 			String js = con.receive();
-			// cfg.databaseName 在返回的列表中，设置，否则报错
+            
+           
+            JObject jr = JSON.fromJson(js);
+            string ok = jr["ok"].ToString();
+            string result = jr["result"].ToString();
+            // cfg.databaseName 在返回的列表中，设置，否则报错
 			lblDatabaseName.Text = cfg.databaseName ;
-            this.refreshTree(null, null);//怎么传参数进去？
+            if ("0".Equals(ok)) { MessageBox.Show(result); return; }
+            JArray jares = (JArray)JsonConvert.DeserializeObject(result);
+            int i;
+            for ( i = 1; i < jares.Count; i++)
+            {
+                string tmp = jares[i].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
+
+                if (lblDatabaseName.Text.Equals(tmp))
+                    break;
+             }
+             if(i.Equals(jares.Count)){
+                 MessageBox.Show("database doesn't find!");
+                 return;
+             }
+             else
+                 this.refreshTree(null, null);//怎么传参数进去？
 			//TODO refresh UIs
 			//1.left top info 
 			//2.table tree
@@ -195,6 +215,11 @@ namespace aWorkbench
 		private void setMsg(string type, string msg) { //TODO 把type，msg消息设置到消息框中
 
 		}
+
+        private void lstConsoleMsg_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
 
 	}
 }
