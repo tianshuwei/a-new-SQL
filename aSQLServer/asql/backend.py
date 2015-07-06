@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import struct,collections,traceback,string
-import os,sys
+import os,sys,shutil 
+from parser_helper import Vector
 
 i_def=struct.calcsize("20si")
 i_col=struct.calcsize("20s8si???")
@@ -190,7 +191,44 @@ def rename_table(tname, tname_new, dbname):
 		print traceback.print_exc()
 
 def edit_table(tname, cname, columnspec, dbname):
-	pass
+	try:
+		tabs = list_tables(dbname)
+		if tabs["ok"]==0: return tabs
+		cols = list_columns(tname,dbname)
+		if cols["ok"]==0: return cols
+		shutil.copy('%s.dbf'%dbname,'%s_temp.dbf'%dbname)
+		brwfile=open('%s.dbf'%dbname,'rb+')
+		for tab in tabs["result"][1:]:
+			cont = struct.unpack("20si",brwfile.read(i_def))	
+			if tname==tab[0]:	
+				for col in cols["result"][1:]:
+					if cname==col[0]:
+						table_cont = simple_select(tname,dbname)
+						if table_cont["ok"]==0: return table_cont
+						brwfile.seek(0,1)
+						brwfile.write(struct.pack("20s8si???",*columnspec))
+						brwfile.flush()
+						brwfile.close()
+						if columnspec[2] != col[2]:							
+							os.rename("%s.dat"%os.path.join(dbname,tname),"%s_temp.dat"%os.path.join(dbname,tname))
+							in_rt = insert(tname,table_cont["result"][1:],dbname)
+							print in_rt
+							if in_rt["ok"]==0: return in_rt
+							os.remove("%s_temp.dat"%os.path.join(dbname,tname))
+						os.remove('%s_temp.dbf'%dbname)
+						return {"ok":1,"result":[["success in editing the table!",],]}
+					brwfile.read(i_col)
+			for i in range(cont[1]): 
+				#print i
+				t_emp=brwfile.read(i_col)
+				#print struct.unpack("20s8si???",t_emp)
+		return {"ok":0,"result":["There is no such column!",]}
+	except Exception,e:
+		if os.isfile('%s.dbf'%dbname,'rb+') : os.remove('%s.dbf'%dbname,'rb+')
+		if os.isfile("%s.dat"%os.path.join(dbname,tname)) : os.remove("%s.dat"%os.path.join(dbname,tname))
+		os.rename('%s_temp.dbf'%dbname,'rb+','%s.dbf'%dbname,'rb+')
+		os.rename("%s.dat_temp"%os.path.join(dbname,tname),"%s.dat"%os.path.join(dbname,tname))
+		return {"ok":0,"result":["Error! The data has rollbacked",]}
 
 def drop_table(tname, dbname):
 	rt = rename_table(tname,"~~~DeletedTable~~~",dbname)
@@ -247,7 +285,7 @@ def insert(tname, values, dbname):
 def delete(tname, where, dbname):
 	from parser1 import mk_test
 	test = mk_test(where)
-	all_ele = simple_select(tname,dbname)
+	all_ele = simple_select_t(tname,dbname)
 	if all_ele["ok"] == 0:
 		return all_ele
 	ii=0
@@ -256,26 +294,36 @@ def delete(tname, where, dbname):
 	format_str=format_string(cols["result"][1:])
 	brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
 	#rt0=[]
+	to_dele=[]
 	fo_st='?'
 	for col in cols["result"][1:]:
 		#rt0.append(col[0])
 		#count=count+1
 		fo_st=fo_st+'?'
-	length = struct.calcsize(fo_st+format_str)
-	print fo_st+format_str
+	length = struct.calcsize(fo_st)
+	length = length+struct.calcsize(format_str)
+	#print fo_st+format_str
 	for ele in all_ele["result"][1:]:
 		def relation(field_name):
 			#ii=0
 			mapping={
-				col:ele[ii]
-				for col in all_ele["result"][0] for ii in xrange(len(ele))
+				col[0]:ele[iii]
+				for col in all_ele["result"][1:] for iii in xrange(len(ele))
 			}
 			return mapping[field_name]
-		ii+=1
 		if test(relation):
-			print "dele:"+str(ii)
-			#brwfile=open('%s.dat'%os.path.join(dbname,tname),'rb+')
-			#
+			to_dele.append(ii)
+		ii+=1
+
+	for ele_dele in to_dele:
+		bwfile=open('%s.dat'%os.path.join(dbname,tname),'rb+')
+		#print "dele:"+str(ele_dele*length)
+		bwfile.seek(ele_dele*length)
+		bwfile.write(struct.pack('?',False))
+		bwfile.flush()
+		bwfile.close()
+	return {"ok":1,"result":[["succeed in deletion!",],]}
+
 	"""test: e.g.
 	# for each record:
 		# you need some function equivalent to this:
@@ -293,12 +341,112 @@ def delete(tname, where, dbname):
 
 
 def update(tname, assignments, where, dbname):
-	pass
+	from parser1 import mk_test,_eval
+	test = mk_test(where)
+	all_ele = simple_select_t(tname,dbname)
+	if all_ele["ok"] == 0:
+		return all_ele
+	ii=0
+	cols = list_columns(tname,dbname)
+	if cols["ok"]==0 : return cols
+	format_str=format_string(cols["result"][1:])
+	brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
+	#rt0=[]
+	# to_dele=[]
+	fo_st='?'
+	for col in cols["result"][1:]:
+		#rt0.append(col[0])
+		#count=count+1
+		fo_st=fo_st+'?'
+	length = struct.calcsize(fo_st)
+	length = length+struct.calcsize(format_str)
+	#print fo_st+format_str
+	for ele in all_ele["result"][1:]:
+		def relation(field_name):
+			#ii=0
+			mapping={
+				col[0]:ele[iii]
+				for col in all_ele["result"][1:] for iii in xrange(len(ele))
+			}
+			return mapping[field_name]
+		if test(relation):
+			_flag=[]
+			for ass in assignments:
+				if isinstance(ass[1],Vector):
+					mod_str = _eval(ass[1],relation)
+				else:
+					mod_str = ass[1]
+				for nu,e in enumerate(ele):
+					if ass[0]==cols["result"][nu+1][0]:
+						ele[nu]=mod_str
+						break
+			for _c in range(len(ele)):
+				if ele[_c]==None:
+					if cols["result"][0][_c]=='int':
+						ele[_c]=0
+					else:
+						ele[_c]='None'
+					_flag.append(True)
+				else:
+					_flag.append(False)
+			_uf = struct.pack(fo_st[1:],*_flag)
+			_updated = struct.pack(format_str,*ele)
+			bwfile=open('%s.dat'%os.path.join(dbname,tname),'rb+')
+			bwfile.seek(ii*length+1)
+			bwfile.write(_uf)
+			bwfile.write(_updated)
+			bwfile.flush()
+			bwfile.close()
+		ii+=1
+	return {"ok":1,"result":[["succeed in update!",],]}
 
 def select(projection, join_expr, where, dbname):
 	pass
 
 def simple_select(tname, dbname):
+	try:
+		cols = list_columns(tname,dbname)
+		if cols["ok"]==0 : return cols
+		format_str=format_string(cols["result"][1:])
+		
+		rt0=[]
+		rt_lists=[]
+		fo_st=''
+		count=0
+		for col in cols["result"][1:]:
+			rt0.append(col[0])
+			count=count+1
+			fo_st=fo_st+'?'
+		rt_lists.append(rt0)
+		brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
+		c1 = brfile.read(struct.calcsize('?'))
+		while c1 !='':
+			rt_list=[]
+			ii=0
+			content1=brfile.read(struct.calcsize('?')*count)
+			un_co1=struct.unpack(fo_st,content1)
+			content2=brfile.read(struct.calcsize(format_str))
+			if struct.unpack("?",c1)[0]:
+				# print struct.unpack("?",c1)[0]
+				un_co2=struct.unpack(format_str,content2)
+				for f in un_co1:
+					if f:
+						rt_list.append(None)
+					else:
+						if cols["result"][ii+1][1]=='string':
+							rt_list.append(un_co2[ii].strip('\0'))
+						else:
+							rt_list.append(un_co2[ii])
+					ii=ii+1
+				rt_lists.append(rt_list)
+			c1 = brfile.read(struct.calcsize('?'))
+		return {"ok":1,"result":rt_lists}
+	except IOError:
+		return {"ok":1,"result":rt_lists}
+	except Exception,e:
+		print traceback.print_exc()
+
+def simple_select_t(tname, dbname):
 	try:
 		cols = list_columns(tname,dbname)
 		if cols["ok"]==0 : return cols
@@ -315,7 +463,7 @@ def simple_select(tname, dbname):
 		rt_lists.append(rt0)
 		c1 = brfile.read(struct.calcsize('?'))
 		while c1 !='':
-			if struct.unpack("?",c1):
+			if True:
 				rt_list=[]
 				ii=0
 				content1=brfile.read(struct.calcsize('?')*count)
@@ -352,8 +500,15 @@ def test2():
 	a=((1, "jason"),
 					(2, None),
 					(3, "warwick avenue"))
-	insert("tab11",a,"test1")
+	print insert("tab111",a,"test1")
 
 if __name__ == '__main__':
-	from parser_helper import Vector as V
-	print delete("tab1",V('=',1,1),"test1")
+	#pass
+	#test()
+	#test2()
+	#from parser_helper import Vector as V
+	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
+	print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
+	print list_columns("tab111","test1")
+	print simple_select("tab111","test1")
+	#print list_databases()
