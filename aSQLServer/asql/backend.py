@@ -416,10 +416,31 @@ def select(projection, join_expr, where, dbname):
 			tables.append(_table())
 		ops = [product]*(len(join_expr)-1)
 		mul_cols = []
+		index = []
 		for tab in join_expr:
-			mul_cols.append(list_columns(tab,dbname))
+			mul_cols.append(list_columns(tab,dbname)["result"][1:])
+		for col_na in projection:
+			i=0
+			j=0
+			f=False
+			for t_na in join_expr:
+				#print "t_na:  "+t_na
+				if t_na==col_na.tname:
+					for c_na in mul_cols[i]:
+						#print "c_na:  ",c_na
+						if c_na[0] == col_na.cname: 
+							index.append(j)
+							f=True
+							if f : break
+						j+=1
+				i+=1
+				if f: break
+		rt_list=[]
+		rt_list.append([c.cname for c in projection])
 		for piece in jbiops(ops,tables):
-			print piece
+			# print [piece[i] for i in index]
+			rt_list.append([piece[i] for i in index])
+		return {"ok":1,"result":rt_list}
 
 	except Exception:
 		print traceback.print_exc()
@@ -526,12 +547,12 @@ def test2():
 if __name__ == '__main__':
 	from parser1 import CellRef
 	#pass
-	test()
+	#test()
 	#test2()
 	#from parser_helper import Vector as V
 	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
 	#print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
 	#print list_columns("tab111","test1")
-	print simple_select("tab1","test1")
+	#print simple_select("tab1","test1")
 	#print list_databases()
-	#select([CellRef("tab111.id")],['tab111','tab111',"tab111"],Vector('=',1,1),"test1")
+	print select([CellRef("tab111.name")],['tab111',"tab111"],Vector('=',1,1),"test1")
