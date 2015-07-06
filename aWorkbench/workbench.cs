@@ -92,7 +92,7 @@ namespace aWorkbench
                         for (int i = 0; i < xx; i++)
                         {
                                         tables[i] = "drop table " + e.Node.TreeView.Nodes[i].Text;
-                                        string tmp = tables[i] + "in" + cfg.databaseName;
+                                        string tmp = tables[i] + "in" + cfg.databaseName+";";
                                         new frmConfirmScript(tmp).Show();
                                     }
                                     //do something
@@ -103,12 +103,12 @@ namespace aWorkbench
                             
 						break;
 					case 1:// TableA
-                        string tableA = "drop " + e.Node.Text;
+                        string tableA = "drop table " + e.Node.Text;
                         ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tableA);
                         tsmi1.Click += new System.EventHandler(
                             (object _sender, EventArgs _e) =>
                             {
-                                string tmp = tableA + "in" + cfg.databaseName;
+                                string tmp = tableA + " in " + cfg.databaseName+";";
                                 new frmConfirmScript(tmp).Show();
 
 							}

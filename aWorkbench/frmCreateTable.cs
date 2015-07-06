@@ -57,6 +57,11 @@ namespace aWorkbench
             if (TheListview != null)
             {
                 TheListview.SubItems[3].Text = this.comboBox3.Text.ToString();//primary key
+                if (TheListview.SubItems[3].Text.Equals("primary key"))
+                {
+                    TheListview.SubItems[2].Text = "string";
+                    TheListview.SubItems[1].Text = "n";
+                }
             }
         }
 
@@ -152,22 +157,23 @@ namespace aWorkbench
                 MessageBox.Show("Please set table name");
                 return;
             }
-            string add = "creat table " + textBox2.Text + "(";
+            string add = "create table " + textBox2.Text + "(";
             for (int i = 0; i < c; i++)
             {
                 add = add + listView1.Items[i].SubItems[0].Text + " " + listView1.Items[i].SubItems[2].Text;
 
                 if (listView1.Items[i].SubItems[3].Text.Equals("primary key"))
                 {
-                    add = add + " primary key";
+                    add = add + " primary key  not null ";
                     judge = 1;
                 }
-                if (listView1.Items[i].SubItems[1].Text.Equals("n"))
+                else if (listView1.Items[i].SubItems[1].Text.Equals("n"))
                     add = add + " not null ";
                 if (i != c - 1)
                     add = add + ",";
+                add = add + "\n";
             }
-            add = add + ")"+"into"+cfg.databaseName+";";
+            add = add + " ) "+" into "+cfg.databaseName+";";
             
             if (judge.Equals(0))
             {

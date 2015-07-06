@@ -48,31 +48,31 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.textBox1);
-            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(4);
+            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(671, 471);
-            this.splitContainer1.SplitterDistance = 409;
-            this.splitContainer1.SplitterWidth = 3;
+            this.splitContainer1.Size = new System.Drawing.Size(895, 589);
+            this.splitContainer1.SplitterDistance = 511;
             this.splitContainer1.TabIndex = 0;
             // 
             // textBox1
             // 
+            this.textBox1.AcceptsReturn = true;
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(4, 4);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox1.Location = new System.Drawing.Point(5, 5);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(663, 401);
+            this.textBox1.Size = new System.Drawing.Size(885, 501);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -80,7 +80,7 @@
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -91,28 +91,26 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.confirm_btn);
             this.splitContainer2.Panel2.Controls.Add(this.cancel_btn);
-            this.splitContainer2.Size = new System.Drawing.Size(671, 59);
-            this.splitContainer2.SplitterDistance = 404;
-            this.splitContainer2.SplitterWidth = 3;
+            this.splitContainer2.Size = new System.Drawing.Size(895, 74);
+            this.splitContainer2.SplitterDistance = 538;
             this.splitContainer2.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(9, 23);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(12, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(339, 19);
+            this.label1.Size = new System.Drawing.Size(406, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "the above script will be run, ok?";
             // 
             // confirm_btn
             // 
-            this.confirm_btn.Location = new System.Drawing.Point(146, 20);
-            this.confirm_btn.Margin = new System.Windows.Forms.Padding(2);
+            this.confirm_btn.Location = new System.Drawing.Point(195, 25);
+            this.confirm_btn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.confirm_btn.Name = "confirm_btn";
-            this.confirm_btn.Size = new System.Drawing.Size(62, 22);
+            this.confirm_btn.Size = new System.Drawing.Size(83, 28);
             this.confirm_btn.TabIndex = 1;
             this.confirm_btn.Text = "confirm";
             this.confirm_btn.UseVisualStyleBackColor = true;
@@ -120,10 +118,10 @@
             // 
             // cancel_btn
             // 
-            this.cancel_btn.Location = new System.Drawing.Point(49, 20);
-            this.cancel_btn.Margin = new System.Windows.Forms.Padding(2);
+            this.cancel_btn.Location = new System.Drawing.Point(65, 25);
+            this.cancel_btn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cancel_btn.Name = "cancel_btn";
-            this.cancel_btn.Size = new System.Drawing.Size(62, 22);
+            this.cancel_btn.Size = new System.Drawing.Size(83, 28);
             this.cancel_btn.TabIndex = 0;
             this.cancel_btn.Text = "cancel";
             this.cancel_btn.UseVisualStyleBackColor = true;
@@ -131,11 +129,11 @@
             // 
             // frmConfirmScript
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(671, 471);
+            this.ClientSize = new System.Drawing.Size(895, 589);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmConfirmScript";
             this.Text = "frmConfirmScript";
             this.splitContainer1.Panel1.ResumeLayout(false);
