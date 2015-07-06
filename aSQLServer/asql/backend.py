@@ -415,7 +415,7 @@ def select(projection, join_expr, where, dbname):
 					yield Vector(*ele)
 			tables.append(_table())
 		if join_expr[1][0]=='leftjoin':
-			print join_expr[1][1].tname
+			#print join_expr[1][1].tname
 			cols1 = list_columns(join_expr[1][1].tname,dbname)
 			i = 0
 			for col1 in cols1["result"][1:]:
@@ -424,7 +424,7 @@ def select(projection, join_expr, where, dbname):
 				i+=1
 			cols2 = list_columns(join_expr[1][2].tname,dbname)
 			j = 0
-			print join_expr[1][2].tname
+			#print join_expr[1][2].tname
 			for col2 in cols2["result"][1:]:
 				if col2[0]==join_expr[1][2].cname:
 					break
@@ -449,11 +449,11 @@ def select(projection, join_expr, where, dbname):
 					#print "t_na:  "+t_na
 					if t_na==col_na.tname:
 						for c_na in mul_cols[i]:
-							print "c_na:  ",c_na
-							print col_na.cname == c_na
+							#print "c_na:  ",c_na
+							#print col_na.cname == c_na
 							if c_na[0] == col_na.cname: 
 								index.append(j)
-								print "j: "+str(j)
+								#print "j: "+str(j)
 								f=True
 								if f : break
 							j+=1
@@ -582,12 +582,12 @@ if __name__ == '__main__':
 	from parser1 import CellRef
 	#pass
 	#test()
-	test2()
+	#test2()
 	#from parser_helper import Vector as V
 	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
 	#print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
 	#print list_columns("tab111","test1")
 	#print simple_select("tab1","test1")
 	#print list_databases()
-	#print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
-	print select('*',['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
+	print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',"tab111"],Vector('=',1,1),"test1")
+	#print select('*',['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
