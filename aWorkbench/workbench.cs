@@ -89,8 +89,9 @@ namespace aWorkbench
                                 );
                             menuStripEditTable.Items.RemoveAt(0);
                             menuStripEditTable.Items.Insert(0, tsmi);
-                            break;
+                            
                         }
+                        this.refreshTree(null, null);
 						break;
 					case 1:// TableA
                         string tableA = "drop " + e.Node.Text;
@@ -104,6 +105,7 @@ namespace aWorkbench
 							);
 						menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi1);
+                        this.refreshTree(null, null);
 						break;
 					case 2://col1
                         string rcol = "remove col " + e.Node.Text;
@@ -119,6 +121,7 @@ namespace aWorkbench
 							);
 						menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi2);
+                        this.refreshTree(null, null);
 						break;
 				}
 			}
@@ -163,6 +166,7 @@ namespace aWorkbench
                 }
                 this.setMsg("success", "refresh success");
             }
+            setMsg("success", "refresh tree");
 		}
 
 		private void runCmds(object sender, EventArgs e)
@@ -170,12 +174,14 @@ namespace aWorkbench
             string cmds = txtScripts.Text;
 			//todo
             new frmConfirmScript(cmds).Show();
+            setMsg("success", "cmds");
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
 		{
-            if (txtScripts.SelectedText != "")
+            if (txtScripts.SelectedText != ""){
                 Clipboard.SetDataObject(txtScripts.SelectedText);
+            setMsg("success","copy to clipboard");}
 		}
 
 		private void openScript(object sender, EventArgs e)
@@ -197,7 +203,9 @@ namespace aWorkbench
 		}
 
 		private void setMsg(string type, string msg) { //TODO 把type，msg消息设置到消息框中
-
+            ListViewItem lvi = new ListViewItem(type);    //ListView的首项
+            this.lstConsoleMsg.Items.Add(lvi);
+            lvi.SubItems.AddRange(new string[] { msg});
 		}
 
 	}

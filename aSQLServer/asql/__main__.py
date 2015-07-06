@@ -1,3 +1,3 @@
-import server, parser
-server.onSQL=parser.execute
+import server, parser1
+server.onSQL=parser1.execute
 server.run()

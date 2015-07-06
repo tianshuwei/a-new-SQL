@@ -243,10 +243,39 @@ def insert(tname, values, dbname):
 					(3, "duffy", "warwick avenue")) """
 
 
-def delete(tname, where, dbname):
-	from parser import mk_test
-	test = mk_test(where)
 
+def delete(tname, where, dbname):
+	from parser1 import mk_test
+	test = mk_test(where)
+	all_ele = simple_select(tname,dbname)
+	if all_ele["ok"] == 0:
+		return all_ele
+	ii=0
+	cols = list_columns(tname,dbname)
+	if cols["ok"]==0 : return cols
+	format_str=format_string(cols["result"][1:])
+	brfile=open('%s.dat'%os.path.join(dbname,tname),'rb')
+	#rt0=[]
+	fo_st='?'
+	for col in cols["result"][1:]:
+		#rt0.append(col[0])
+		#count=count+1
+		fo_st=fo_st+'?'
+	length = struct.calcsize(fo_st+format_str)
+	print fo_st+format_str
+	for ele in all_ele["result"][1:]:
+		def relation(field_name):
+			#ii=0
+			mapping={
+				col:ele[ii]
+				for col in all_ele["result"][0] for ii in xrange(len(ele))
+			}
+			return mapping[field_name]
+		ii+=1
+		if test(relation):
+			print "dele:"+str(ii)
+			#brwfile=open('%s.dat'%os.path.join(dbname,tname),'rb+')
+			#
 	"""test: e.g.
 	# for each record:
 		# you need some function equivalent to this:
@@ -292,7 +321,7 @@ def simple_select(tname, dbname):
 				content1=brfile.read(struct.calcsize('?')*count)
 				un_co1=struct.unpack(fo_st,content1)
 				content2=brfile.read(struct.calcsize(format_str))
-				print format_str
+				#print format_str
 				un_co2=struct.unpack(format_str,content2)
 				for f in un_co1:
 					if f:
@@ -306,29 +335,6 @@ def simple_select(tname, dbname):
 				rt_lists.append(rt_list)
 			c1 = brfile.read(struct.calcsize('?'))
 		return {"ok":1,"result":rt_lists}
-		# for line in values:
-		# 	li=list(line)
-		# 	null_list=[]
-		# 	format_null=''
-		# 	i=0
-		# 	for e in li:
-		# 		if e == None:
-		# 			null_list.append(True)
-		# 			if cols["result"][i+1][1]=="int": 
-		# 				li[i]=0
-		# 			else:
-		# 				li[i]='None'
-		# 		else:
-		# 			null_list.append(False)
-		# 		i=i+1
-		# 		format_null=format_null+'?'
-		# 	content2 = struct.pack('?'+format_null,True,*null_list)
-		# 	bwfile.write(content2)
-		# 	content2 = struct.pack(format_str,*li)
-		# 	bwfile.write(content2)
-		# bwfile.flush()
-		# bwfile.close()
-		return {"ok":1,"result":[["succeed in insert!",],]}
 	except IOError:
 		return {"ok":0,"result":["There is no such database!",]}
 	except Exception,e:
@@ -349,4 +355,5 @@ def test2():
 	insert("tab11",a,"test1")
 
 if __name__ == '__main__':
-	print simple_select("tab1","test1")
+	from parser_helper import Vector as V
+	print delete("tab1",V('=',1,1),"test1")

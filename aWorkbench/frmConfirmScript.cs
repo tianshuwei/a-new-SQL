@@ -13,6 +13,7 @@ namespace aWorkbench
 	{
 		private aSQLConnector con;
 		public frmConfirmScript(string script) {
+            InitializeComponent();
             textBox1.Text = script;
 			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
 		}
