@@ -52,29 +52,9 @@ namespace aWorkbench
 		{
             con.send("list databases;");
 			String js = con.receive();
-            
-           
-            JObject jr = JSON.fromJson(js);
-            string ok = jr["ok"].ToString();
-            string result = jr["result"].ToString();
-            // cfg.databaseName 在返回的列表中，设置，否则报错
+			// cfg.databaseName 在返回的列表中，设置，否则报错
 			lblDatabaseName.Text = cfg.databaseName ;
-            if ("0".Equals(ok)) { MessageBox.Show(result); return; }
-            JArray jares = (JArray)JsonConvert.DeserializeObject(result);
-            int i;
-            for ( i = 1; i < jares.Count; i++)
-            {
-                string tmp = jares[i].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
-
-                if (lblDatabaseName.Text.Equals(tmp))
-                    break;
-             }
-             if(i.Equals(jares.Count)){
-                 MessageBox.Show("database doesn't find!");
-                 return;
-             }
-             else
-                 this.refreshTree(null, null);//怎么传参数进去？
+            this.refreshTree(null, null);//怎么传参数进去？
 			//TODO refresh UIs
 			//1.left top info 
 			//2.table tree
@@ -149,6 +129,7 @@ namespace aWorkbench
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
             //database_name
+            treeTable.Nodes.Clear();
 			con.send(String.Format("list tables in {0};", cfg.databaseName));
 			TreeNode tn1 = treeTable.Nodes.Add(cfg.databaseName);
             //table_name&col_name
@@ -159,23 +140,25 @@ namespace aWorkbench
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
-
+            //result={[[tablename],[t1],[t2]]}
 			if ("0".Equals(ok)) { MessageBox.Show(result); return; }
             JArray jares = (JArray)JsonConvert.DeserializeObject(result);
-            for (int i = 0; i < jares.Count; i++)
+            for (int i = 1; i < jares.Count; i++)
             {
-                TreeNode tn2 = new TreeNode(jares[i].ToString());
+                string tmp = jares[i].ToString().Split(new char[5] { '[', ']','\r','\n','\"' })[4];
+                TreeNode tn2 = new TreeNode(tmp);
                 tn1.Nodes.Add(tn2);
-
-                con.send(String.Format("list columns from {0} in {1};", jares[i].ToString(), cfg.databaseName));
+                //string ssss = String.Format("list columns from {0} in {1};", tmp, cfg.databaseName);
+                con.send(String.Format("list columns from {0} in {1};", tmp, cfg.databaseName));
                 string colname = con.receive();
                 //colname = "{'ok':1,result:['col1','col2','col3']}";
                 JObject jrcol = JSON.fromJson(colname);
                 string result2 = jrcol["result"].ToString();
                 JArray jacol = (JArray)JsonConvert.DeserializeObject(result2);
-                for (int j = 0; j < jacol.Count; j++)
+                for (int j = 1; j < jacol.Count; j++)
                 {
-                    TreeNode tn3 = new TreeNode(jacol[i].ToString());
+                    string tmp2 = jacol[j].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
+                    TreeNode tn3 = new TreeNode(tmp2);
                     tn2.Nodes.Add(tn3);
                 }
             }
@@ -215,11 +198,6 @@ namespace aWorkbench
 		private void setMsg(string type, string msg) { //TODO 把type，msg消息设置到消息框中
 
 		}
-
-        private void lstConsoleMsg_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
 	}
 }
