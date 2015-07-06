@@ -48,7 +48,7 @@ namespace aWorkbench
                     if (j == 0)
                         item.Text = xxx.ToString();
                     else
-                        item.SubItems.Add(xxx.ToString());
+                    item.SubItems.Add(xxx.ToString());
                     j++;
                 }
                 this.listViewResult.Items.Add(item);
@@ -82,24 +82,25 @@ namespace aWorkbench
                 switch (e.Node.Level)
                 {
 					case 0://顶层 Tables
+                      
+                            ToolStripMenuItem tsmi = new ToolStripMenuItem("drop tables");
+                            tsmi.Click += new System.EventHandler(
+                                (object _sender, EventArgs _e) =>
+                                {
                         int xx = e.Node.TreeView.SelectedNode.GetNodeCount(true);
                         string[] tables = new string[20];
                         for (int i = 0; i < xx; i++)
                         {
-                            tables[i] = "drop " + e.Node.TreeView.Nodes[i].Text;
-                            ToolStripMenuItem tsmi = new ToolStripMenuItem(tables[i]);
-                            tsmi.Click += new System.EventHandler(
-                                (object _sender, EventArgs _e) =>
-                                {
-                                    con.send(tables[i]);
+                                        tables[i] = "drop table " + e.Node.TreeView.Nodes[i].Text;
+                                        string tmp = tables[i] + "in" + cfg.databaseName;
+                                        new frmConfirmScript(tmp).Show();
+                                    }
                                     //do something
                                 }
                                 );
                             menuStripEditTable.Items.RemoveAt(0);
                             menuStripEditTable.Items.Insert(0, tsmi);
                             
-                        }
-                        this.refreshTree(null, null);
 						break;
 					case 1:// TableA
                         string tableA = "drop " + e.Node.Text;
@@ -107,33 +108,37 @@ namespace aWorkbench
                         tsmi1.Click += new System.EventHandler(
                             (object _sender, EventArgs _e) =>
                             {
-                                con.send(tableA);
+                                string tmp = tableA + "in" + cfg.databaseName;
+                                new frmConfirmScript(tmp).Show();
 
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi1);
-                        this.refreshTree(null, null);
 						break;
 					case 2://col1
+                        menuStripEditTable.Items.RemoveAt(0);
                         string rcol = "remove col " + e.Node.Text;
                         ToolStripMenuItem tsmi2 = new ToolStripMenuItem(rcol);
-                        tsmi2.Click += new System.EventHandler(
-                            (object _sender, EventArgs _e) =>
-                            {
-                                string ipString = aWorkbench.cfg.ip;
-                                int port = aWorkbench.cfg.port;
-                                con.send(rcol);
-								//do something
-							}
-							);
-						menuStripEditTable.Items.RemoveAt(0);
+                    //    tsmi2.Click += new System.EventHandler(
+                    //        (object _sender, EventArgs _e) =>
+                    //        {
+                    //            new frmConfirmScript(rcol).Show();
+                    //            //do something
+                    //        }
+                    //        );
+                    //    menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi2);
-                        this.refreshTree(null, null);
+                        menuStripEditTable.Items[0].Enabled = false;
+
 						break;
 				}
 			}
-
+            //if (e.Node.Level==2)
+            //{
+            //    ToolStripMenuItem tsmi2 = new ToolStripMenuItem("TODO");
+            //    menuStripEditTable.Items.Insert(0, tsmi2);
+            //}
 		}
 
 
@@ -156,7 +161,7 @@ namespace aWorkbench
             JArray jares = (JArray)JsonConvert.DeserializeObject(result);
             for (int i = 1; i < jares.Count; i++)
             {
-                string tmp = jares[i].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
+                string tmp = jares[i].ToString().Split(new char[5] { '[', ']','\r','\n','\"' })[4];
                 TreeNode tn2 = new TreeNode(tmp);
                 tn1.Nodes.Add(tn2);
                 //string ssss = String.Format("list columns from {0} in {1};", tmp, cfg.databaseName);
@@ -172,7 +177,6 @@ namespace aWorkbench
                     TreeNode tn3 = new TreeNode(tmp2);
                     tn2.Nodes.Add(tn3);
                 }
-                this.setMsg("success", "refresh success");
             }
             setMsg("success", "refresh tree");
 		}

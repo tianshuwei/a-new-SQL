@@ -43,15 +43,20 @@ namespace aWorkbench
         {
             if (TheListview != null)
             {
-                TheListview.SubItems[2].Text = this.comboBox1.Text.ToString();//改变ListView的值为下拉框的值
+                TheListview.SubItems[2].Text = this.comboBox1.Text.ToString();//类型
             }
             if (TheListview != null)
             {
-                TheListview.SubItems[1].Text = this.comboBox2.Text.ToString();//改变ListView的值为下拉框的值
+                TheListview.SubItems[1].Text = this.comboBox2.Text.ToString();//是否为空
+                if (TheListview.SubItems[3].Text.Equals("primary key") && TheListview.SubItems[1].Text.Equals("y"))
+                {
+                    MessageBox.Show("The primary key cannot be NULL");
+                    TheListview.SubItems[1].Text = "n";
+                }
             }
             if (TheListview != null)
             {
-                TheListview.SubItems[3].Text = this.comboBox3.Text.ToString();//改变ListView的值为下拉框的值
+                TheListview.SubItems[3].Text = this.comboBox3.Text.ToString();//primary key
             }
         }
 
@@ -142,6 +147,11 @@ namespace aWorkbench
         {
             int judge = 0;
             int c = this.listView1.Items.Count;
+            if(textBox2.Text.Equals(""))
+            {
+                MessageBox.Show("Please set table name");
+                return;
+            }
             string add = "creat table " + textBox2.Text + "(";
             for (int i = 0; i < c; i++)
             {
@@ -152,12 +162,13 @@ namespace aWorkbench
                     add = add + " primary key";
                     judge = 1;
                 }
-                else if (listView1.Items[i].SubItems[1].Text.Equals("n"))
+                if (listView1.Items[i].SubItems[1].Text.Equals("n"))
                     add = add + " not null ";
                 if (i != c - 1)
                     add = add + ",";
             }
-            add = add + ")";
+            add = add + ")"+"into"+cfg.databaseName+";";
+            
             if (judge.Equals(0))
             {
                 MessageBox.Show("Please set primary key");
@@ -175,6 +186,12 @@ namespace aWorkbench
         private void button2_Click(object sender, EventArgs e)
         {
             int i = Convert.ToInt32(textBox3.Text);
+            int c=listView1.Items.Count;
+            if (i > c)
+            {
+                MessageBox.Show("out of range");
+                return;
+            }
             listView1.Items.RemoveAt(i);
         }
     }
