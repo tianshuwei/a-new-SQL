@@ -139,22 +139,24 @@ namespace aWorkbench
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
-
+            //result={[[tablename],[t1],[t2]]}
 			if ("0".Equals(ok)) { MessageBox.Show(result); return; }
             JArray jares = (JArray)JsonConvert.DeserializeObject(result);
-            for (int i = 0; i < jares.Count; i++)
+            for (int i = 1; i < jares.Count; i++)
             {
-                TreeNode tn2 = new TreeNode(jares[i].ToString());
+                string tmp = jares[i].ToString().Split(new char[5] { '[', ']','\r','\n','\"' })[4];
+                TreeNode tn2 = new TreeNode(tmp);
                 tn1.Nodes.Add(tn2);
-
-                con.send(String.Format("list columns from {0} in {1};", jares[i].ToString(), cfg.databaseName));
+                //string ssss = String.Format("list columns from {0} in {1};", tmp, cfg.databaseName);
+                con.send(String.Format("list columns from {0} in {1};", tmp, cfg.databaseName));
                 string colname = con.receive();
                 //colname = "{'ok':1,result:['col1','col2','col3']}";
                 JObject jrcol = JSON.fromJson(colname);
                 string result2 = jrcol["result"].ToString();
                 JArray jacol = (JArray)JsonConvert.DeserializeObject(result2);
-                for (int j = 0; j < jacol.Count; j++)
+                for (int j = 1; j < jacol.Count; j++)
                 {
+                    string tmp2 = jacol[i].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
                     TreeNode tn3 = new TreeNode(jacol[i].ToString());
                     tn2.Nodes.Add(tn3);
                 }
