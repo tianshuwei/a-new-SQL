@@ -21,12 +21,13 @@ namespace aWorkbench
             //foreach() key-type into keys
             _values = new List<List<Elem>>();
             // foreach  values.Add(new List<string>(???))
-
-            jsonString = "{\"ok\":1, \"result\":[[\"id\",\"username\"],[1,\"john\"]]}";
+            jsonString = jsonString;
+            //jsonString = "{\"ok\":1, \"result\":[[\"id\",\"username\"],[1,\"john\"]]}";
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
 
+            if ("0".Equals(ok)) {return; }
             JArray jares = (JArray)JsonConvert.DeserializeObject(result);
             string jacol = jares[0].ToString();
             JArray colarray = (JArray)JsonConvert.DeserializeObject(jacol);

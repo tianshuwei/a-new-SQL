@@ -29,22 +29,30 @@ namespace aWorkbench
             listViewResult.View = View.Details;//设置显示方式
             listViewResult.Scrollable = true;//是否自动显示滚动条
             listViewResult.MultiSelect = false;//是否可以选择多行
-
+            listViewResult.Clear();
             //添加表头
             foreach (string str in rs.keys)
             {
                 listViewResult.Columns.Add(str);
             }
             //添加表格内容
+            int i = 0;
             foreach(List<Elem> xx in rs.values)
             {
                 ListViewItem item = new ListViewItem();
-                item.SubItems.Clear();
+                item.ImageIndex = i;
+                //item.SubItems.Clear();
+                int j = 0;
                 foreach (Elem xxx in xx)
                 {
+                    if (j == 0)
+                        item.Text = xxx.ToString();
+                    else
                     item.SubItems.Add(xxx.ToString());
+                    j++;
                 }
-                listViewResult.Items.Add(item);
+                this.listViewResult.Items.Add(item);
+                i++;
             }
         }
 
@@ -74,23 +82,25 @@ namespace aWorkbench
                 switch (e.Node.Level)
                 {
 					case 0://顶层 Tables
+                      
+                            ToolStripMenuItem tsmi = new ToolStripMenuItem("drop tables");
+                            tsmi.Click += new System.EventHandler(
+                                (object _sender, EventArgs _e) =>
+                                {
                         int xx = e.Node.TreeView.SelectedNode.GetNodeCount(true);
                         string[] tables = new string[20];
                         for (int i = 0; i < xx; i++)
                         {
-                            tables[i] = "drop " + e.Node.TreeView.Nodes[i].Text;
-                            ToolStripMenuItem tsmi = new ToolStripMenuItem(tables[i]);
-                            tsmi.Click += new System.EventHandler(
-                                (object _sender, EventArgs _e) =>
-                                {
-                                    con.send(tables[i]);
+                                        tables[i] = "drop table " + e.Node.TreeView.Nodes[i].Text;
+                                        string tmp = tables[i] + "in" + cfg.databaseName;
+                                        new frmConfirmScript(tmp).Show();
+                                    }
                                     //do something
                                 }
                                 );
                             menuStripEditTable.Items.RemoveAt(0);
                             menuStripEditTable.Items.Insert(0, tsmi);
-                            break;
-                        }
+                            
 						break;
 					case 1:// TableA
                         string tableA = "drop " + e.Node.Text;
@@ -98,7 +108,8 @@ namespace aWorkbench
                         tsmi1.Click += new System.EventHandler(
                             (object _sender, EventArgs _e) =>
                             {
-                                con.send(tableA);
+                                string tmp = tableA + "in" + cfg.databaseName;
+                                new frmConfirmScript(tmp).Show();
 
 							}
 							);
@@ -106,23 +117,28 @@ namespace aWorkbench
                         menuStripEditTable.Items.Insert(0, tsmi1);
 						break;
 					case 2://col1
+                        menuStripEditTable.Items.RemoveAt(0);
                         string rcol = "remove col " + e.Node.Text;
                         ToolStripMenuItem tsmi2 = new ToolStripMenuItem(rcol);
-                        tsmi2.Click += new System.EventHandler(
-                            (object _sender, EventArgs _e) =>
-                            {
-                                string ipString = aWorkbench.cfg.ip;
-                                int port = aWorkbench.cfg.port;
-                                con.send(rcol);
-								//do something
-							}
-							);
-						menuStripEditTable.Items.RemoveAt(0);
+                    //    tsmi2.Click += new System.EventHandler(
+                    //        (object _sender, EventArgs _e) =>
+                    //        {
+                    //            new frmConfirmScript(rcol).Show();
+                    //            //do something
+                    //        }
+                    //        );
+                    //    menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi2);
+                        menuStripEditTable.Items[0].Enabled = false;
+
 						break;
 				}
 			}
-
+            //if (e.Node.Level==2)
+            //{
+            //    ToolStripMenuItem tsmi2 = new ToolStripMenuItem("TODO");
+            //    menuStripEditTable.Items.Insert(0, tsmi2);
+            //}
 		}
 
 
@@ -162,19 +178,26 @@ namespace aWorkbench
                     tn2.Nodes.Add(tn3);
                 }
             }
+            setMsg("success", "refresh tree");
 		}
 
 		private void runCmds(object sender, EventArgs e)
 		{
             string cmds = txtScripts.Text;
 			//todo
-			con.send(cmds);
+            //new frmConfirmScript(cmds).Show();
+            con.send(cmds);
+            string jasonstring = con.receive();
+            aWorkbench.resultSet res = new aWorkbench.resultSet(jasonstring, "tablename");
+            this.getResult(res);
+            setMsg("success", cmds);
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
 		{
-            if (txtScripts.SelectedText != "")
+            if (txtScripts.SelectedText != ""){
                 Clipboard.SetDataObject(txtScripts.SelectedText);
+            setMsg("success","copy to clipboard");}
 		}
 
 		private void openScript(object sender, EventArgs e)
@@ -196,8 +219,15 @@ namespace aWorkbench
 		}
 
 		private void setMsg(string type, string msg) { //TODO 把type，msg消息设置到消息框中
-
+            ListViewItem lvi = new ListViewItem(type);    //ListView的首项
+            this.lstConsoleMsg.Items.Add(lvi);
+            lvi.SubItems.AddRange(new string[] { msg});
 		}
+
+        private void listViewResult_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
 
 	}
 }

@@ -6,13 +6,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace aWorkbench
 {
 	public partial class frmConfirmScript : Form
 	{
 		private aSQLConnector con;
 		public frmConfirmScript(string script) {
+            InitializeComponent();
             textBox1.Text = script;
 			con = aSQLConnector.getInstance(cfg.ip, cfg.port);
 		}
@@ -37,6 +39,13 @@ namespace aWorkbench
         {
             //confirm_btn
             con.send(textBox1.Text);
+            string res=con.receive();
+            JObject jr = JSON.fromJson(res);
+            string ok = jr["ok"].ToString();
+            string result = jr["result"].ToString();
+            if ("0".Equals(ok)) { MessageBox.Show(result); return; }
+            else { MessageBox.Show("success"); }
+            this.Close();
         }
 	}
 }
