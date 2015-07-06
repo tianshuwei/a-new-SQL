@@ -24,6 +24,11 @@ namespace aWorkbench
 		}
         private void getResult(resultSet rs)
         {
+            //if (rs.Equals("0"))
+            //{
+            //    setMsg("failed", txtScripts.Text);
+            //    return;
+            //}
             listViewResult.GridLines = true;//表格是否显示网格线
             listViewResult.FullRowSelect = true;//是否选中整行
             listViewResult.View = View.Details;//设置显示方式
@@ -188,6 +193,15 @@ namespace aWorkbench
             //new frmConfirmScript(cmds).Show();
             con.send(cmds);
             string jasonstring = con.receive();
+             JObject jr = JSON.fromJson(jasonstring);
+            string ok = jr["ok"].ToString();
+            string result = jr["result"].ToString();
+
+            if ("0".Equals(ok))
+            {
+                setMsg("failed", cmds);
+                return;
+            }
             aWorkbench.resultSet res = new aWorkbench.resultSet(jasonstring, "tablename");
             this.getResult(res);
             setMsg("success", cmds);
