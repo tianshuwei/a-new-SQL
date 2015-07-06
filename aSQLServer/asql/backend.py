@@ -9,6 +9,9 @@ i_col=struct.calcsize("20s8si???")
 
 def create_table(tablespec, dbname):
 	try:
+		creat_dir(dbname)
+		fp =open('%s.dat'%os.path.join(dbname,tablespec.tname),'ab')
+		fp.close()
 		tables=list_tables(dbname)
 		if tables["ok"]==1:
 			for a_table in tables["result"][1:]:
@@ -401,7 +404,25 @@ def update(tname, assignments, where, dbname):
 	return {"ok":1,"result":[["succeed in update!",],]}
 
 def select(projection, join_expr, where, dbname):
-	pass
+	from joiner import product,innerjoin,leftjoin,rightjoin,fulljoin,jbiops
+	try:
+		tables=[]
+		for tab in join_expr:
+			t=simple_select(tab,dbname)
+			if t["ok"]==0 : return t
+			def _table():
+				for ele in t["result"][1:]:
+					yield Vector(*ele)
+			tables.append(_table())
+		ops = [product]*(len(join_expr)-1)
+		mul_cols = []
+		for tab in join_expr:
+			mul_cols.append(list_columns(tab,dbname))
+		for piece in jbiops(ops,tables):
+			print piece
+
+	except Exception:
+		print traceback.print_exc()
 
 def simple_select(tname, dbname):
 	try:
@@ -493,7 +514,7 @@ def test():
 	c2=("name","string",20,False,True,True)
 	columns=[c1,c2]
 	tablespec=collections.namedtuple('tablespec','tname columns')
-	t=tablespec(tname="tab111",columns=columns)
+	t=tablespec(tname="tab1",columns=columns)
 	print create_table(t,"test1")
 
 def test2():
@@ -503,12 +524,14 @@ def test2():
 	print insert("tab111",a,"test1")
 
 if __name__ == '__main__':
+	from parser1 import CellRef
 	#pass
-	#test()
+	test()
 	#test2()
 	#from parser_helper import Vector as V
 	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
-	print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
-	print list_columns("tab111","test1")
-	print simple_select("tab111","test1")
+	#print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
+	#print list_columns("tab111","test1")
+	print simple_select("tab1","test1")
 	#print list_databases()
+	#select([CellRef("tab111.id")],['tab111','tab111',"tab111"],Vector('=',1,1),"test1")
