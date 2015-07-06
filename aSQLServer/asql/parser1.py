@@ -59,7 +59,7 @@ LIKE_startswith = re.compile(r'^(.+)%$')
 
 def mk_test(_boolean_expr):
 	e = _boolean_expr
-	if not isinstance(e, Vector): return
+	if not isinstance(e, V): return
 	def test(R):
 		o = e[0]
 		t = lambda e: mk_test(e)(R)
