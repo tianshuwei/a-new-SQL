@@ -127,8 +127,8 @@ def endWith(s,*endstring):
 
 def list_databases():
 	try:
-		list_file = os.listdir(os.path.dirname(os.path.abspath(__file__)))
-		s = os.listdir(os.path.dirname(os.path.abspath(__file__)))
+		# list_file = os.listdir(os.path.dirname(os.path.abspath(__file__)))
+		list_file = os.listdir('.')
 		f_file = [["DatabaseName",],]
 		for i in list_file:
 				if endWith(i,'.dbf'):
