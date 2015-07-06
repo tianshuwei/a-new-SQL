@@ -38,6 +38,7 @@ namespace aWorkbench
         {
             //confirm_btn
             con.send(textBox1.Text);
+            string a = con.receive();
         }
 	}
 }

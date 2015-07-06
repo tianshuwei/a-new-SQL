@@ -74,58 +74,63 @@ namespace aWorkbench
                 switch (e.Node.Level)
                 {
 					case 0://顶层 Tables
-                        int xx = e.Node.TreeView.SelectedNode.GetNodeCount(true);
-                        string[] tables = new string[20];
-                        for (int i = 0; i < xx; i++)
-                        {
-                            tables[i] = "drop " + e.Node.TreeView.Nodes[i].Text;
-                            ToolStripMenuItem tsmi = new ToolStripMenuItem(tables[i]);
+                      
+                            ToolStripMenuItem tsmi = new ToolStripMenuItem("drop tables");
                             tsmi.Click += new System.EventHandler(
                                 (object _sender, EventArgs _e) =>
                                 {
-                                    con.send(tables[i]);
+                                    int xx = e.Node.TreeView.SelectedNode.GetNodeCount(true);
+                                    string[] tables = new string[20];
+                                    for (int i = 0; i < xx; i++)
+                                    {
+                                        tables[i] = "drop table " + e.Node.TreeView.Nodes[i].Text;
+                                        string tmp = tables[i] + "in" + cfg.databaseName;
+                                        new frmConfirmScript(tmp).Show();
+                                    }
                                     //do something
                                 }
                                 );
                             menuStripEditTable.Items.RemoveAt(0);
                             menuStripEditTable.Items.Insert(0, tsmi);
-                            
-                        }
-                        this.refreshTree(null, null);
-						break;
+
+                        break;
 					case 1:// TableA
                         string tableA = "drop " + e.Node.Text;
                         ToolStripMenuItem tsmi1 = new ToolStripMenuItem(tableA);
                         tsmi1.Click += new System.EventHandler(
                             (object _sender, EventArgs _e) =>
                             {
-                                con.send(tableA);
+                                string tmp = tableA + "in" + cfg.databaseName;
+                                new frmConfirmScript(tmp).Show();
 
 							}
 							);
 						menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi1);
-                        this.refreshTree(null, null);
 						break;
-					case 2://col1
+                    case 2://col1 
+                        menuStripEditTable.Items.RemoveAt(0);
                         string rcol = "remove col " + e.Node.Text;
                         ToolStripMenuItem tsmi2 = new ToolStripMenuItem(rcol);
-                        tsmi2.Click += new System.EventHandler(
-                            (object _sender, EventArgs _e) =>
-                            {
-                                string ipString = aWorkbench.cfg.ip;
-                                int port = aWorkbench.cfg.port;
-                                con.send(rcol);
-								//do something
-							}
-							);
-						menuStripEditTable.Items.RemoveAt(0);
+                    //    tsmi2.Click += new System.EventHandler(
+                    //        (object _sender, EventArgs _e) =>
+                    //        {
+                    //            new frmConfirmScript(rcol).Show();
+                    //            //do something
+                    //        }
+                    //        );
+                    //    menuStripEditTable.Items.RemoveAt(0);
                         menuStripEditTable.Items.Insert(0, tsmi2);
-                        this.refreshTree(null, null);
-						break;
+                        menuStripEditTable.Items[0].Enabled = false;
+
+                        break;
 				}
 			}
-
+            //if (e.Node.Level==2)
+            //{
+            //    ToolStripMenuItem tsmi2 = new ToolStripMenuItem("TODO");
+            //    menuStripEditTable.Items.Insert(0, tsmi2);
+            //}
 		}
 
 
