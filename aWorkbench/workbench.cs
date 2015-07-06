@@ -145,7 +145,7 @@ namespace aWorkbench
             JArray jares = (JArray)JsonConvert.DeserializeObject(result);
             for (int i = 1; i < jares.Count; i++)
             {
-                string tmp = jares[i].ToString().Split(new char[5] { '[', ']','\r','\n','\"' })[4];
+                string tmp = jares[i].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
                 TreeNode tn2 = new TreeNode(tmp);
                 tn1.Nodes.Add(tn2);
                 //string ssss = String.Format("list columns from {0} in {1};", tmp, cfg.databaseName);
@@ -161,6 +161,7 @@ namespace aWorkbench
                     TreeNode tn3 = new TreeNode(tmp2);
                     tn2.Nodes.Add(tn3);
                 }
+                this.setMsg("success", "refresh success");
             }
 		}
 
@@ -168,7 +169,7 @@ namespace aWorkbench
 		{
             string cmds = txtScripts.Text;
 			//todo
-			con.send(cmds);
+            new frmConfirmScript(cmds).Show();
 		}
 
 		private void cpyToClipboard(object sender, EventArgs e)
