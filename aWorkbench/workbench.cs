@@ -129,6 +129,7 @@ namespace aWorkbench
 		private void refreshTree(object sender, EventArgs e)// get tables from server and create tree
 		{
             //database_name
+            treeTable.Nodes.Clear();
 			con.send(String.Format("list tables in {0};", cfg.databaseName));
 			TreeNode tn1 = treeTable.Nodes.Add(cfg.databaseName);
             //table_name&col_name
@@ -156,8 +157,8 @@ namespace aWorkbench
                 JArray jacol = (JArray)JsonConvert.DeserializeObject(result2);
                 for (int j = 1; j < jacol.Count; j++)
                 {
-                    string tmp2 = jacol[i].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
-                    TreeNode tn3 = new TreeNode(jacol[i].ToString());
+                    string tmp2 = jacol[j].ToString().Split(new char[5] { '[', ']', '\r', '\n', '\"' })[4];
+                    TreeNode tn3 = new TreeNode(tmp2);
                     tn2.Nodes.Add(tn3);
                 }
             }
