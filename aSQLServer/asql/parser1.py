@@ -100,7 +100,7 @@ parse = peglet.Parser(G('asql.re')+G('asql.lex.re'),
 	mk_columnIII=lambda *ts:columnspec(cname=ts[0],type=ts[1][0],size=ts[1][1],key=False,null=True,valid=True),
 	mk_columnIV=lambda *ts:columnspec(cname=ts[0],type=ts[1][0],size=ts[1][1],key=ts[2][0],null=ts[2][1],valid=ts[3]),
 	mk_typeI=lambda *ts: (ts[0], sizeof[ts[0].lower()]) if ts[0].lower() in sizeof else (ts[0], 0),
-	mk_constraintI=lambda *ts: (0, ts[0]), # key=False null=ts[0]
+	mk_constraintI=lambda *ts: (False, ts[0]), # key=False null=ts[0]
 	const_null=lambda *ts: None, mk_key=lambda *ts: bool(ts[0]),
 	mk_null=lambda *ts: bool(ts[0].upper()!="NOT"), mk_valid=lambda *ts: bool(ts[0].upper()!="NOT"),
 	mk_create_table=lambda *ts: (create_table,(tablespec(tname=ts[0], columns=ts[1]),ts[2])),
