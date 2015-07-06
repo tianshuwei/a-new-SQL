@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Windows.Forms;
 
 namespace aWorkbench
 {
@@ -26,8 +27,6 @@ namespace aWorkbench
             JObject jr = JSON.fromJson(jsonString);
             string ok = jr["ok"].ToString();
             string result = jr["result"].ToString();
-
-            if ("0".Equals(ok)) {return; }
             JArray jares = (JArray)JsonConvert.DeserializeObject(result);
             string jacol = jares[0].ToString();
             JArray colarray = (JArray)JsonConvert.DeserializeObject(jacol);
