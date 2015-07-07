@@ -509,7 +509,7 @@ def simple_select(tname, dbname):
 					if f:
 						rt_list.append(None)
 					else:
-						if cols["result"][ii+1][1]=='string':
+						if cols["result"][ii+1][1]=='string' or cols["result"][ii+1][1]=='varchar':
 							rt_list.append(un_co2[ii].strip('\0'))
 						else:
 							rt_list.append(un_co2[ii])
@@ -551,7 +551,7 @@ def simple_select_t(tname, dbname):
 					if f:
 						rt_list.append(None)
 					else:
-						if cols["result"][ii+1][1]=='string':
+						if cols["result"][ii+1][1]=='string' or cols["result"][ii+1][1]=='varchar':
 							rt_list.append(un_co2[ii].strip('\0'))
 						else:
 							rt_list.append(un_co2[ii])
@@ -585,9 +585,9 @@ if __name__ == '__main__':
 	#test2()
 	#from parser_helper import Vector as V
 	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
-	#print edit_table("tab111","name",("name","string",1,False,False,True),"test1")
-	#print list_columns("tab111","test1")
-	#print simple_select("tab1","test1")
+	#print edit_table("tab1","name",("name","string",100,False,False,True),"test1")
+	#print list_columns("tab1","test1")
+	print simple_select("tab1","test1")
 	#print list_databases()
-	print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',"tab111"],Vector('=',1,1),"test1")
+	#print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',"tab111"],Vector('=',1,1),"test1")
 	#print select('*',['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
