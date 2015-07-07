@@ -311,7 +311,7 @@ def delete(tname, where, dbname):
 			#ii=0
 			mapping={
 				col[0]:ele[iii]
-				for col in all_ele["result"][1:] for iii in xrange(len(ele))
+				for iii,col in enumerate(all_ele["result"][1:])
 			}
 			return mapping[field_name]
 		if test(relation):
@@ -444,7 +444,7 @@ def select(projection, join_expr, where, dbname):
 			for tab in join_expr:
 				mul_cols.append(list_columns(tab,dbname)["result"][1:])
 			ops = [product]*(len(join_expr)-1)
-		if projection != '*':
+		if projection[0] != '*':
 			for col_na in projection:
 				i=0
 				j=0
@@ -595,4 +595,4 @@ if __name__ == '__main__':
 	#print list_databases()
 	#print drop_table("tab111","test1")
 	#print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',"tab111"],Vector('=',1,1),"test1")
-	print select('*',['tab11',Vector("leftjoin",(CellRef("tab11.name"),CellRef("tab111.name")),"tab111")],Vector('=',1,1),"test1")
+	print select(('*',),['tab11',Vector("leftjoin",(CellRef("tab11.name"),CellRef("tab111.name")),"tab111")],Vector('=',1,1),"test1")
