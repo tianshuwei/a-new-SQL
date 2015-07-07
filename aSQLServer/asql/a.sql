@@ -24,5 +24,5 @@ select z1.id, z2.name from z1, z1, z2 where 1=1 in test_table1;
 select * from z1 left join z2 on z1.id=z2.id where 1=1 in test_table1;
 delete from z2 where id=1 in test_table1;
 select * from z2 in test_table1;
-drop table z1;
-drop table z2;
+drop table z1 in test_table1;
+drop table z2 in test_table1;
