@@ -4,7 +4,7 @@ package=lambda *ts:''.join(['\x1B^','\x1B,'.join(ts),'\x1B$'])
 
 def send(lines):
     sock=socket(AF_INET, SOCK_STREAM)
-    sock.connect(('120.24.174.100',1234))
+    sock.connect(('120.24.174.100',2222))
     sock.send(package('','\x20'.join(lines),''))
     while 1:
     	data=sock.recv(2048)

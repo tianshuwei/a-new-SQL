@@ -367,20 +367,20 @@ def update(tname, assignments, where, dbname):
 	for ele in all_ele["result"][1:]:
 		def relation(field_name):
 			#ii=0
-			print ele
+			#print ele
 			mapping={
 				col[0]:ele[iii]
 				for iii,col in enumerate(cols["result"][1:])
 			}
-			print mapping
+			#print mapping
 			return mapping[field_name]
 		if test(relation):
 			_flag=[]
-			print "test ok"
+			#print "test ok"
 			for ass in assignments:
 				if isinstance(ass[1],Vector):
 					mod_str = _eval(ass[1],relation)
-					print mod_str
+					#print mod_str
 				else:
 					mod_str = ass[1]
 				for nu,e in enumerate(ele):
