@@ -411,7 +411,7 @@ def select(projection, join_expr, where, dbname):
 	from joiner import product,innerjoin,leftjoin,rightjoin,fulljoin,jbiops
 	try:
 		tables=[]
-		for tab in ((_t_na if isinstance(_t_na,str) else _t_na[3]) for _t_na in join_expr):
+		for tab in ((_t_na if isinstance(_t_na,str) else _t_na[2]) for _t_na in join_expr):
 			t=simple_select(tab,dbname)
 			if t["ok"]==0 : return t
 			def _table():
@@ -420,17 +420,17 @@ def select(projection, join_expr, where, dbname):
 			tables.append(_table())
 		if join_expr[1][0]=='leftjoin':
 			#print join_expr[1][1].tname
-			cols1 = list_columns(join_expr[1][1].tname,dbname)
+			cols1 = list_columns(join_expr[1][1][0].tname,dbname)
 			i = 0
 			for col1 in cols1["result"][1:]:
-				if col1[0]==join_expr[1][1].cname:
+				if col1[0]==join_expr[1][1][0].cname:
 					break
 				i+=1
-			cols2 = list_columns(join_expr[1][2].tname,dbname)
+			cols2 = list_columns(join_expr[1][1][1].tname,dbname)
 			j = 0
 			#print join_expr[1][2].tname
 			for col2 in cols2["result"][1:]:
-				if col2[0]==join_expr[1][2].cname:
+				if col2[0]==join_expr[1][1][1].cname:
 					break
 				j+=1
 			len_j=len(cols2)
@@ -449,7 +449,7 @@ def select(projection, join_expr, where, dbname):
 				i=0
 				j=0
 				f=False
-				for t_na in ((_t_na if isinstance(_t_na,str) else _t_na[3]) for _t_na in join_expr):
+				for t_na in ((_t_na if isinstance(_t_na,str) else _t_na[2]) for _t_na in join_expr):
 					#print "t_na:  "+t_na
 					if t_na==col_na.tname:
 						for c_na in mul_cols[i]:
@@ -472,7 +472,7 @@ def select(projection, join_expr, where, dbname):
 		else:
 			rt_list=[]
 			rt_def=[]
-			for t_na in ((_t_na if isinstance(_t_na,str) else _t_na[3]) for _t_na in join_expr):
+			for t_na in ((_t_na if isinstance(_t_na,str) else _t_na[2]) for _t_na in join_expr):
 				rt_def+=([aa[0] for aa in list_columns(t_na,dbname)["result"][1:]])
 			rt_list.append(rt_def)
 			for piece in jbiops(ops,tables):
@@ -573,14 +573,14 @@ def test():
 	c2=("name","string",20,False,True,True)
 	columns=[c1,c2]
 	tablespec=collections.namedtuple('tablespec','tname columns')
-	t=tablespec(tname="tab11",columns=columns)
+	t=tablespec(tname="tab111",columns=columns)
 	print create_table(t,"test1")
 
 def test2():
 	a=((1, "jason"),
 					(2, None),
 					(3, "aaa"))
-	print insert("tab1",a,"test1")
+	print insert("tab111",a,"test1")
 
 if __name__ == '__main__':
 	from parser1 import CellRef
@@ -588,11 +588,11 @@ if __name__ == '__main__':
 	#test()
 	#test2()
 	#from parser_helper import Vector as V
-	print update("tab1",(("name","haha!"),),Vector('=',CellRef("id"),1),"test1")
+	#print update("tab1",(("name","haha!"),),Vector('=',CellRef("id"),1),"test1")
 	#print edit_table("tab1","name",("name","string",100,False,False,True),"test1")
 	#print list_columns("tab1","test1")
-	print simple_select("tab1","test1")
+	#print simple_select("tab1","test1")
 	#print list_databases()
 	#print drop_table("tab111","test1")
 	#print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',"tab111"],Vector('=',1,1),"test1")
-	#print select('*',['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
+	print select('*',['tab11',Vector("leftjoin",(CellRef("tab11.name"),CellRef("tab111.name")),"tab111")],Vector('=',1,1),"test1")
