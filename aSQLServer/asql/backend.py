@@ -311,7 +311,7 @@ def delete(tname, where, dbname):
 			#ii=0
 			mapping={
 				col[0]:ele[iii]
-				for col in all_ele["result"][1:] for iii in xrange(len(ele))
+				for iii,col in enumerate(all_ele["result"][1:])
 			}
 			return mapping[field_name]
 		if test(relation):
