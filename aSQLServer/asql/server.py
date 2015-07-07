@@ -10,7 +10,7 @@ onSQL = lambda sql: error("no parser bound")
 def run():
 	try:
 		sock=socket(AF_INET, SOCK_STREAM)
-		sock.bind(('0.0.0.0', 1234))
+		sock.bind(('0.0.0.0', 2222))
 		sock.listen(5)
 		while 1:
 			s, raddr=sock.accept()

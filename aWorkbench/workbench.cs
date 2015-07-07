@@ -236,11 +236,10 @@ namespace aWorkbench
             this.lstConsoleMsg.Items.Add(lvi);
             lvi.SubItems.AddRange(new string[] { msg});
 		}
-
+        
         private void listViewResult_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
-
 	}
 }

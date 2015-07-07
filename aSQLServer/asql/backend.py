@@ -367,16 +367,20 @@ def update(tname, assignments, where, dbname):
 	for ele in all_ele["result"][1:]:
 		def relation(field_name):
 			#ii=0
+			#print ele
 			mapping={
 				col[0]:ele[iii]
-				for col in all_ele["result"][1:] for iii in xrange(len(ele))
+				for iii,col in enumerate(cols["result"][1:])
 			}
+			#print mapping
 			return mapping[field_name]
 		if test(relation):
 			_flag=[]
+			#print "test ok"
 			for ass in assignments:
 				if isinstance(ass[1],Vector):
 					mod_str = _eval(ass[1],relation)
+					#print mod_str
 				else:
 					mod_str = ass[1]
 				for nu,e in enumerate(ele):
@@ -576,7 +580,7 @@ def test2():
 	a=((1, "jason"),
 					(2, None),
 					(3, "aaa"))
-	print insert("tab11",a,"test1")
+	print insert("tab1",a,"test1")
 
 if __name__ == '__main__':
 	from parser1 import CellRef
@@ -584,10 +588,11 @@ if __name__ == '__main__':
 	#test()
 	#test2()
 	#from parser_helper import Vector as V
-	#print update("tab111",(("name","haha!"),),Vector('=',1,1),"test1")
+	print update("tab1",(("name","haha!"),),Vector('=',CellRef("id"),1),"test1")
 	#print edit_table("tab1","name",("name","string",100,False,False,True),"test1")
 	#print list_columns("tab1","test1")
 	print simple_select("tab1","test1")
 	#print list_databases()
+	#print drop_table("tab111","test1")
 	#print select([CellRef("tab11.id"),CellRef("tab11.name")],['tab11',"tab111"],Vector('=',1,1),"test1")
 	#print select('*',['tab11',Vector("leftjoin",CellRef("tab11.name"),CellRef("tab111.name"),"tab111")],Vector('=',1,1),"test1")
